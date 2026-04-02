@@ -1,0 +1,55 @@
+.ActionBar {
+}
+
+.ActionBarButton {
+  position: relative;
+  display: inline-block;
+  width: 56px;
+  height: 56px;
+  margin-right: 1em;
+  border: 1px solid black;
+  font-size: 10px;
+  cursor: pointer;
+}
+.ActionBarButton__n {
+  z-index: 1;
+  position: absolute;
+  bottom: 0;
+  left: 3px;
+  color: white;
+  font-family: monospace;
+  font-size: 16px;
+  text-shadow: 0 0 3px black;
+}
+.ActionBarButton__name {
+  display: none;
+}
+
+@property --angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+.GCDOverlay {
+  z-index: 2;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  --color: rgba(0, 0, 0, 0.85);
+  background-color: --color;
+  background: conic-gradient(
+    transparent calc(var(--angle)),
+    var(--color) var(--angle)
+  );
+  animation: conic-effect 1.5s ease-in-out 1;
+}
+@keyframes conic-effect {
+  0% {
+    --angle: -1deg;
+  }
+  100% {
+    --angle: 360deg;
+  }
+}
