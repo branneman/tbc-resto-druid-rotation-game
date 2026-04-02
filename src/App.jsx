@@ -2,6 +2,7 @@ import { useReducer } from 'react'
 import { useAnimationFrame } from './hooks/useAnimationFrame.js'
 import { gameReducer, INITIAL_STATE } from './reducers/game.js'
 import ActionBar from './components/ActionBar'
+import CastBar from './components/CastBar'
 import CombatLog from './components/CombatLog'
 
 function App() {
@@ -18,7 +19,7 @@ function App() {
   return (
     <>
       <ActionBar state={state} dispatch={dispatch} />
-      <CastBar />
+      {state.castBar !== null ? <CastBar state={state} /> : ''}
       <HoTTracker />
       <CombatLog castHistory={state.castHistory} />
       <pre style={{ fontFamily: 'monospace' }}>
@@ -26,14 +27,6 @@ function App() {
       </pre>
     </>
   )
-}
-
-// reads castBar from state
-// does not render at 0% or 100%
-// computes to fill percentage: (now - startedAt) / duration
-// uses gameTime from state as the 'current time'
-function CastBar() {
-  return <></>
 }
 
 // maps over activeEffects, shows remaining duration via `(appliedAt + duration) - now`

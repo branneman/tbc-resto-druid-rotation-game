@@ -43,7 +43,7 @@
     transparent calc(var(--angle)),
     var(--color) var(--angle)
   );
-  animation: conic-effect 1.5s ease-in-out 1;
+  animation: conic-effect 1.5s linear 1;
 }
 @keyframes conic-effect {
   0% {

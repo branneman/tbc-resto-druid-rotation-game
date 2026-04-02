@@ -1,3 +1,35 @@
 body {
+  margin: 0;
+  padding: 0;
   font-family: sans-serif;
+}
+
+.layout {
+  aspect-ratio: 16 / 9;
+  position: relative;
+}
+.layout__actionbar {
+  position: absolute;
+  top: 70%;
+  left: 40%;
+  width: 20%;
+  height: 5%;
+}
+.layout__castbar {
+  position: absolute;
+  top: 80%;
+  left: 40%;
+  width: 20%;
+  height: 5%;
+  background: red;
+}
+.layout__combatlog {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+.layout__hottracker {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
