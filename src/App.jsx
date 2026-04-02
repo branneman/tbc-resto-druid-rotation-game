@@ -2,6 +2,7 @@ import { useReducer } from 'react'
 import { useAnimationFrame } from './hooks/useAnimationFrame.js'
 import { gameReducer, INITIAL_STATE } from './reducers/game.js'
 import ActionBar from './components/ActionBar'
+import CombatLog from './components/CombatLog'
 
 function App() {
   const [state, dispatch] = useReducer(
@@ -16,8 +17,8 @@ function App() {
 
   return (
     <>
-      <CastBar />
       <ActionBar state={state} dispatch={dispatch} />
+      <CastBar />
       <HoTTracker />
       <CombatLog castHistory={state.castHistory} />
       <pre style={{ fontFamily: 'monospace' }}>
@@ -37,11 +38,6 @@ function CastBar() {
 
 // maps over activeEffects, shows remaining duration via `(appliedAt + duration) - now`
 function HoTTracker() {
-  return <></>
-}
-
-// reads castHistory
-function CombatLog() {
   return <></>
 }
 

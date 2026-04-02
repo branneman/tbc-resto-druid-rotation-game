@@ -1,63 +1,4 @@
-// ─── Spell Definitions ────────────────────────────────────────────────────────
-// Approximate TBC values. Swap in real rank data later.
-
-export const SPELL_DATA = {
-  lifebloom: {
-    id: 'lifebloom',
-    name: 'Lifebloom',
-    castTime: 0,
-    gcd: 1500,
-    manaCost: 220,
-    isHot: true,
-    duration: 7000,
-    tickInterval: 1000,
-    maxStacks: 3,
-    healPerTick: 273, // per stack, multiplied at tick time
-    bloomHeal: 600, // per stack, at expiry
-  },
-  rejuvenation: {
-    id: 'rejuvenation',
-    name: 'Rejuvenation',
-    castTime: 0,
-    gcd: 1500,
-    manaCost: 415,
-    isHot: true,
-    duration: 12000,
-    tickInterval: 3000,
-    healPerTick: 888,
-  },
-  regrowth: {
-    id: 'regrowth',
-    name: 'Regrowth',
-    castTime: 2000,
-    gcd: 1500,
-    manaCost: 675,
-    isHot: true,
-    duration: 21000,
-    tickInterval: 3000,
-    healPerTick: 350,
-    directHeal: 1200, // applied on cast completion
-  },
-  swiftmend: {
-    id: 'swiftmend',
-    name: 'Swiftmend',
-    castTime: 0,
-    gcd: 1500,
-    manaCost: 335,
-    // Consumes most recent Rejuv or Regrowth.
-    // Heals for remaining ticks × healPerTick of the consumed HoT.
-  },
-  natures_swiftness: {
-    id: 'natures_swiftness',
-    name: "Nature's Swiftness",
-    castTime: 0,
-    gcd: 0, // off-GCD: does not trigger or be blocked by GCD
-    manaCost: 0,
-    cooldown: 180000, // 3 minutes
-  },
-}
-
-// ─── Initial State ─────────────────────────────────────────────────────────────
+import { SPELL_DATA } from './spelldata.js'
 
 export const INITIAL_STATE = {
   gameTime: 0, // raw rAF timestamp; updated every TICK
@@ -72,11 +13,6 @@ export const INITIAL_STATE = {
   nextEffectId: 1, // auto-increment for stable effect identity
 }
 
-// ─── gameReducer ───────────────────────────────────────────────────────────────
-//
-// Pure function. No side effects, no timers, no I/O.
-// All time-based logic is driven by the timestamp passed in via TICK.
-
 export function gameReducer(state, action) {
   switch (action.type) {
     case 'PLAYER_CAST':
@@ -88,12 +24,11 @@ export function gameReducer(state, action) {
   }
 }
 
-// ─── PLAYER_CAST ───────────────────────────────────────────────────────────────
+// Reducer action: PLAYER_CAST
 //
 // Fired from UI button clicks. Validates the cast and either:
 //   - Applies the effect immediately (instant spells)
 //   - Sets the cast bar (cast-time spells)
-
 function handlePlayerCast(state, { spellId, timestamp }) {
   const spell = SPELL_DATA[spellId]
   if (!spell) return state
@@ -120,7 +55,6 @@ function handlePlayerCast(state, { spellId, timestamp }) {
   }
 
   // --- Resolve effective cast time ---
-
   // NS makes the next spell instant (all spells here are Nature spells).
   // NS itself does not consume NS.
   const effectiveCastTime =
@@ -132,7 +66,6 @@ function handlePlayerCast(state, { spellId, timestamp }) {
   const consumeNs = state.nsActive && spellId !== 'natures_swiftness'
 
   // --- Build the shared next-state fragment ---
-
   const castEntry = {
     timestamp,
     type: 'CAST_START',
@@ -160,26 +93,23 @@ function handlePlayerCast(state, { spellId, timestamp }) {
   }
 
   // --- Instant cast: apply effect right now ---
-
   if (effectiveCastTime === 0) {
     return applySpellEffect(baseState, spellId, timestamp)
   }
 
   // --- Cast-time spell: open the cast bar ---
-
   return {
     ...baseState,
     castBar: { spellId, startedAt: timestamp, duration: effectiveCastTime },
   }
 }
 
-// ─── TICK ──────────────────────────────────────────────────────────────────────
+// Reducer action: TICK
 //
 // Runs every animation frame. Responsibilities:
 //   1. Advance gameTime
 //   2. Fire pending HoT ticks and remove expired effects
 //   3. Detect cast bar completion and apply the finished cast's effect
-
 function handleTick(state, { timestamp }) {
   let newEffects = []
   let newHistory = []
@@ -191,7 +121,6 @@ function handleTick(state, { timestamp }) {
   // Core pattern: we never schedule future events.
   // We store when an effect started and derive what *should have happened*
   // by comparing elapsed time to the tick interval on every frame.
-
   for (const effect of state.activeEffects) {
     const spell = SPELL_DATA[effect.spellId]
     const elapsed = timestamp - effect.appliedAt
@@ -242,7 +171,6 @@ function handleTick(state, { timestamp }) {
   }
 
   // --- Check cast bar completion ---
-
   if (state.castBar !== null) {
     const { spellId, startedAt, duration } = state.castBar
 
@@ -299,11 +227,10 @@ function handleTick(state, { timestamp }) {
   }
 }
 
-// ─── applySpellEffect ──────────────────────────────────────────────────────────
+// applySpellEffect
 //
 // Private helper for instant casts. Applies spell-specific side effects
 // to state and returns the new state. Each case is self-contained.
-
 function applySpellEffect(state, spellId, timestamp) {
   const spell = SPELL_DATA[spellId]
   let { activeEffects, nextEffectId, castHistory } = state
