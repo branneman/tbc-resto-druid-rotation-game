@@ -1,4 +1,5 @@
-// Approximate TBC values. Swap in real rank data later.
+// Approximate TBC values.
+// TODO: Add actual values for a Preraid BiS geared druid
 
 export const SPELL_DATA = {
   lifebloom: {
@@ -14,6 +15,8 @@ export const SPELL_DATA = {
     healPerTick: 273, // per stack, multiplied at tick time
     bloomHeal: 600, // per stack, at expiry
   },
+
+  // Rank 13
   rejuvenation: {
     id: 'rejuvenation',
     name: 'Rejuvenation',
@@ -25,6 +28,8 @@ export const SPELL_DATA = {
     tickInterval: 3000,
     healPerTick: 888,
   },
+
+  // Rank 10
   regrowth: {
     id: 'regrowth',
     name: 'Regrowth',
@@ -37,6 +42,7 @@ export const SPELL_DATA = {
     healPerTick: 350,
     directHeal: 1200, // applied on cast completion
   },
+
   swiftmend: {
     id: 'swiftmend',
     name: 'Swiftmend',
@@ -44,8 +50,9 @@ export const SPELL_DATA = {
     gcd: 1500,
     manaCost: 335,
     // Consumes most recent Rejuv or Regrowth.
-    // Heals for remaining ticks × healPerTick of the consumed HoT.
+    // Heals for totalPossibleTicks × healPerTick of the consumed HoT.
   },
+
   natures_swiftness: {
     id: 'natures_swiftness',
     name: "Nature's Swiftness",

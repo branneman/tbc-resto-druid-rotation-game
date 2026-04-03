@@ -42,6 +42,7 @@ function stringifyCast(cast) {
   switch (cast.type) {
     case 'HOT_TICK':
     case 'HEAL':
+    case 'BLOOM':
       return `Your ${spellId2spellName(cast)} heals for ${cast.amount}`
     default:
       return false

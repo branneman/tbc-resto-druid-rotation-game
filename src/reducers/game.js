@@ -327,10 +327,8 @@ function applySpellEffect(state, spellId, timestamp) {
 
       if (consumed) {
         const consumedSpell = SPELL_DATA[consumed.spellId]
-        const elapsed = timestamp - consumed.appliedAt
-        const remainingMs = consumed.duration - elapsed
-        const remainingTicks = Math.ceil(remainingMs / consumed.tickInterval)
-        const healAmount = remainingTicks * consumedSpell.healPerTick
+        const totalTicks = consumed.duration / consumed.tickInterval
+        const healAmount = totalTicks * consumedSpell.healPerTick
 
         activeEffects = activeEffects.filter((e) => e.id !== consumed.id)
         newHistory.push({

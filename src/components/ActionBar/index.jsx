@@ -1,4 +1,4 @@
-import { useKeySequenceDetector } from '../../hooks/dom.jsx'
+import { useKeySequenceDetector } from '../../hooks/dom.js'
 import Icon from '../Icon'
 import './index.css'
 
@@ -10,26 +10,31 @@ export default function ActionBar({ state, dispatch }) {
     <div className='ActionBar'>
       <ActionBarButton
         {...props}
-        num='1'
+        shortcut='1'
         spellId='lifebloom'
         name='Lifebloom'
       />
       <ActionBarButton
         {...props}
-        num='2'
+        shortcut='2'
         spellId='rejuvenation'
         name='Rejuvenation'
       />
-      <ActionBarButton {...props} num='3' spellId='regrowth' name='Regrowth' />
       <ActionBarButton
         {...props}
-        num='4'
+        shortcut='3'
+        spellId='regrowth'
+        name='Regrowth'
+      />
+      <ActionBarButton
+        {...props}
+        shortcut='4'
         spellId='swiftmend'
         name='Swiftmend'
       />
       <ActionBarButton
         {...props}
-        num='5'
+        shortcut='5'
         spellId='natures_swiftness'
         name={"Nature's Swiftness"}
       />
@@ -37,14 +42,14 @@ export default function ActionBar({ state, dispatch }) {
   )
 }
 
-function ActionBarButton({ spellId, name, num, dispatch, enabled }) {
+function ActionBarButton({ spellId, name, shortcut, dispatch, enabled }) {
   const onKeyPress = () =>
     dispatch({
       type: 'PLAYER_CAST',
       spellId,
       timestamp: performance.now(),
     })
-  useKeySequenceDetector(num, onKeyPress)
+  useKeySequenceDetector(shortcut, onKeyPress)
 
   return (
     <div
@@ -56,7 +61,7 @@ function ActionBarButton({ spellId, name, num, dispatch, enabled }) {
       }}
     >
       {enabled ? '' : <div className='GCDOverlay'></div>}
-      <span className='ActionBarButton__n'>{num}</span>
+      <span className='ActionBarButton__shortcut'>{shortcut}</span>
       <span className='ActionBarButton__name'>{name}</span>
     </div>
   )

@@ -15,7 +15,7 @@
   font-size: 10px;
   cursor: pointer;
 }
-.ActionBarButton__n {
+.ActionBarButton__shortcut {
   z-index: 1;
   position: absolute;
   bottom: 0;
