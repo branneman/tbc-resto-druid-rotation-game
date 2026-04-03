@@ -1,8 +1,10 @@
 .CombatLog {
-  position: relative;
-  width: 618px;
-  height: 337px;
-  background: black;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.8);
   color: white;
   overflow-y: scroll;
 }
@@ -12,4 +14,5 @@
 }
 .CombatLog__listitem {
   list-style: none;
+  font-size: 14px;
 }

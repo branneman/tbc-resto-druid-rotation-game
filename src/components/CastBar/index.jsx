@@ -4,8 +4,7 @@ import { SPELL_DATA } from '../../reducers/spelldata.js'
 import './index.css'
 
 export default function CastBar({ state }) {
-  // total_component_width (616) - icon_width (56)
-  const MAX_CAST_BAR_WIDTH = 560
+  const BAR_WIDTH_MAX_PERCENTAGE = 90 // %
 
   const castTime = getSpell(state.castBar.spellId).castTime
   const [secondsLeft, setSecondsLeft] = useState(castTime)
@@ -16,23 +15,31 @@ export default function CastBar({ state }) {
     (state.gameTime - state.castBar.startedAt) /
     state.castBar.duration
   ).toFixed(2)
-  const width = Math.round(MAX_CAST_BAR_WIDTH * fillPercentage)
+  const width = Math.round(BAR_WIDTH_MAX_PERCENTAGE * fillPercentage)
 
-  if (width <= 0 || width >= MAX_CAST_BAR_WIDTH) {
+  if (width <= 0 || width >= BAR_WIDTH_MAX_PERCENTAGE) {
     return <></>
   }
 
+  // const spellName = getSpell(state.castBar.spellId).name
+  // const secondsLeftStr = (secondsLeft / 1000).toFixed(1)
+
   return (
-    <div className='CastBar'>
-      <Icon name={state.castBar.spellId} size='56px' />
-      <div className='CastBar__bar' style={{ width: `${width}px` }}></div>
-      <div className='CastBar__name'>
-        {getSpell(state.castBar.spellId).name}
+    <>
+      <div className='CastBar'>
+        <div className='CastBar__columns'>
+          <div
+            className='CastBar__icon'
+            style={{
+              backgroundImage: `url('/icons/${state.castBar.spellId}.jpg')`,
+            }}
+          ></div>
+          <div className='CastBar__bar' style={{ width: `${width}%` }}></div>
+          {/* <div className='CastBar__name'>{spellName}</div>
+          <div className='CastBar__secondsleft'>{secondsLeftStr}</div> */}
+        </div>
       </div>
-      <div className='CastBar__secondsleft'>
-        {(secondsLeft / 1000).toFixed(1)}
-      </div>
-    </div>
+    </>
   )
 }
 

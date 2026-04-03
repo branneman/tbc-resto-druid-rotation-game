@@ -1,32 +1,27 @@
 .CastBar {
-  position: relative;
-  width: 616px;
-  height: 56px;
-  border: 1px solid black;
+  width: 100%;
   background-color: #442001;
   color: white;
 }
+.CastBar__columns {
+  position: relative;
+  aspect-ratio: 10 / 1;
+  display: flex;
+  width: calc(100% - 2px);
+  border: 1px solid black;
+}
+.CastBar__icon {
+  z-index: 1;
+  aspect-ratio: 1;
+  height: 100%;
+  flex-shrink: 0;
+  background-size: contain;
+}
 .CastBar__bar {
   z-index: 1;
-  position: absolute;
-  top: 0;
-  left: 56px;
-  min-width: 1px;
-  max-width: 560px;
-  bottom: 0;
-  background-color: #b05d09;
+  width: 20%; /* resize from 0% - 90% */
+  height: 100%;
+  flex-shrink: 0;
   background: #c16b0a
     linear-gradient(0deg, #c16b0a 0%, #b25b05 50%, #b05d09 100%);
-}
-.CastBar__name {
-  z-index: 2;
-  position: absolute;
-  top: 20px;
-  left: 64px; /* 56 + 8 */
-}
-.CastBar__secondsleft {
-  z-index: 2;
-  position: absolute;
-  top: 20px;
-  right: 8px;
 }

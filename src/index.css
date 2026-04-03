@@ -7,29 +7,35 @@ body {
 .layout {
   aspect-ratio: 16 / 9;
   position: relative;
+  width: 100%;
+  /* background: rgba(255, 0, 0, 0.1); */
 }
 .layout__actionbar {
   position: absolute;
-  top: 70%;
+  top: 75%;
   left: 40%;
   width: 20%;
   height: 5%;
 }
 .layout__castbar {
   position: absolute;
-  top: 80%;
+  top: 85%;
   left: 40%;
   width: 20%;
   height: 5%;
-  background: red;
 }
 .layout__combatlog {
   position: absolute;
-  left: 0;
+  top: 75%;
+  right: 70%;
   bottom: 0;
+  left: 0;
 }
 .layout__hottracker {
   position: absolute;
   top: 0;
   right: 0;
+  left: 75%;
+  bottom: 95%;
+  /* background: rgba(0, 0, 255, 0.5); */
 }

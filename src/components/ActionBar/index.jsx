@@ -8,18 +8,28 @@ export default function ActionBar({ state, dispatch }) {
 
   return (
     <div className='ActionBar'>
-      <ActionBarButton {...props} n='1' spellId='lifebloom' name='Lifebloom' />
       <ActionBarButton
         {...props}
-        n='2'
+        num='1'
+        spellId='lifebloom'
+        name='Lifebloom'
+      />
+      <ActionBarButton
+        {...props}
+        num='2'
         spellId='rejuvenation'
         name='Rejuvenation'
       />
-      <ActionBarButton {...props} n='3' spellId='regrowth' name='Regrowth' />
-      <ActionBarButton {...props} n='4' spellId='swiftmend' name='Swiftmend' />
+      <ActionBarButton {...props} num='3' spellId='regrowth' name='Regrowth' />
       <ActionBarButton
         {...props}
-        n='5'
+        num='4'
+        spellId='swiftmend'
+        name='Swiftmend'
+      />
+      <ActionBarButton
+        {...props}
+        num='5'
         spellId='natures_swiftness'
         name={"Nature's Swiftness"}
       />
@@ -27,29 +37,27 @@ export default function ActionBar({ state, dispatch }) {
   )
 }
 
-function ActionBarButton({ spellId, name, n, dispatch, enabled }) {
+function ActionBarButton({ spellId, name, num, dispatch, enabled }) {
   const onKeyPress = () =>
     dispatch({
       type: 'PLAYER_CAST',
       spellId,
       timestamp: performance.now(),
     })
-  useKeySequenceDetector(n, onKeyPress)
+  useKeySequenceDetector(num, onKeyPress)
 
   return (
     <div
       className='ActionBarButton'
       onClick={() => onKeyPress()}
       {...(enabled ? {} : { disabled: 'disabled' })}
+      style={{
+        backgroundImage: `url('/icons/${spellId}.jpg')`,
+      }}
     >
-      <Icon name={spellId} size='56px' />
-      {enabled ? '' : <GCDOverlay />}
-      <span className='ActionBarButton__n'>{n}</span>
+      {enabled ? '' : <div className='GCDOverlay'></div>}
+      <span className='ActionBarButton__n'>{num}</span>
       <span className='ActionBarButton__name'>{name}</span>
     </div>
   )
-}
-
-function GCDOverlay() {
-  return <div className='GCDOverlay'></div>
 }

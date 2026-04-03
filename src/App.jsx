@@ -18,13 +18,21 @@ function App() {
 
   return (
     <>
-      <ActionBar state={state} dispatch={dispatch} />
-      {state.castBar !== null ? <CastBar state={state} /> : ''}
-      <HoTTracker />
-      <CombatLog castHistory={state.castHistory} />
-      <pre style={{ fontFamily: 'monospace' }}>
+      <div className='layout__actionbar'>
+        <ActionBar state={state} dispatch={dispatch} />
+      </div>
+      <div className='layout__castbar'>
+        {state.castBar !== null ? <CastBar state={state} /> : ''}
+      </div>
+      <div className='layout__combatlog'>
+        <CombatLog castHistory={state.castHistory} />
+      </div>
+      <div className='layout__hottracker'>
+        <HoTTracker />
+      </div>
+      {/* <pre style={{ fontFamily: 'monospace' }}>
         {JSON.stringify(state, null, 2)}
-      </pre>
+      </pre> */}
     </>
   )
 }
