@@ -4,6 +4,7 @@ import { gameReducer, INITIAL_STATE } from './reducers/game.js'
 import ActionBar from './components/ActionBar'
 import CastBar from './components/CastBar'
 import CombatLog from './components/CombatLog'
+import FloatingCombatText from './components/FloatingCombatText'
 
 function App() {
   const [state, dispatch] = useReducer(
@@ -29,6 +30,9 @@ function App() {
       </div>
       <div className='layout__hottracker'>
         <HoTTracker />
+      </div>
+      <div className='layout__target' style={{ top: '35%', left: '45%' }}>
+        <FloatingCombatText castHistory={state.castHistory} />
       </div>
       {/* <pre style={{ fontFamily: 'monospace' }}>
         {JSON.stringify(state, null, 2)}

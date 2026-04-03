@@ -8,8 +8,20 @@ body {
   aspect-ratio: 16 / 9;
   position: relative;
   width: 100%;
-  /* background: rgba(255, 0, 0, 0.1); */
 }
+.layout::before {
+  content: '';
+  position: absolute;
+  top: -5%;
+  right: -5%;
+  bottom: -5%;
+  left: -5%;
+  background: no-repeat url('/karazhan-banquet-hall.jpg');
+  background-size: cover;
+  filter: blur(8px);
+  z-index: -1;
+}
+
 .layout__actionbar {
   position: absolute;
   top: 75%;
@@ -38,4 +50,9 @@ body {
   left: 75%;
   bottom: 95%;
   /* background: rgba(0, 0, 255, 0.5); */
+}
+.layout__target {
+  position: absolute;
+  min-width: 10%;
+  min-height: 10%;
 }
