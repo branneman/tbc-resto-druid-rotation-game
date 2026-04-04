@@ -13,10 +13,7 @@ body {
 .layout::before {
   content: '';
   position: absolute;
-  top: -5%;
-  right: -5%;
-  bottom: -5%;
-  left: -5%;
+  inset: -5%;
   background: no-repeat url('/karazhan-banquet-hall.jpg');
   background-size: cover;
   filter: blur(3px);
@@ -39,17 +36,11 @@ body {
 }
 .layout__combatlog {
   position: absolute;
-  top: 75%;
-  right: 70%;
-  bottom: 0;
-  left: 0;
+  inset: 75% 70% 0 0;
 }
 .layout__buffs {
   position: absolute;
-  top: 0;
-  right: 0;
-  left: 75%;
-  bottom: 95%;
+  inset: 0 0 95% 75%;
 }
 .layout__partyframes {
   position: absolute;
