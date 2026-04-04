@@ -1,16 +1,45 @@
 import { SPELL_DATA } from './spelldata.js'
 
+export const TARGETS = [
+  {
+    id: 'melee',
+    name: 'Poisonous',
+    role: 'melee',
+    icon: 'combat',
+    health: 8000,
+    maxHealth: 8000,
+  },
+  {
+    id: 'tank',
+    name: 'Yepge',
+    role: 'tank',
+    icon: 'protection',
+    health: 12000,
+    maxHealth: 12000,
+  },
+  {
+    id: 'ranged',
+    name: 'Zeyal',
+    role: 'ranged',
+    icon: 'destruction',
+    health: 6500,
+    maxHealth: 6500,
+  },
+]
+
 export const INITIAL_STATE = {
   gameTime: 0, // raw rAF timestamp; updated every TICK
-  castBar: null, // { spellId, startedAt, duration } | null
+  castBar: null, // { spellId, startedAt, duration, targetId } | null
   gcdEndsAt: 0, // absolute rAF timestamp when GCD expires
-  activeEffects: [], // [{ id, spellId, appliedAt, duration, tickInterval, ticksFired, stacks }]
+  activeEffects: [], // [{ id, spellId, targetId, appliedAt, duration, tickInterval, ticksFired, stacks }]
   mana: 7000,
   maxMana: 7000,
   nsActive: false, // Nature's Swiftness buff is up; next spell is instant
   nsCooldownEndsAt: 0,
   castHistory: [], // append-only event log; every game event is pushed here
   nextEffectId: 1, // auto-increment for stable effect identity
+  targets: TARGETS,
+  selectedTargetId: 'tank',
 }
 
 export function gameReducer(state, action) {
@@ -19,6 +48,8 @@ export function gameReducer(state, action) {
       return handlePlayerCast(state, action)
     case 'TICK':
       return handleTick(state, action)
+    case 'SELECT_TARGET':
+      return { ...state, selectedTargetId: action.targetId }
     default:
       return state
   }
@@ -46,10 +77,12 @@ function handlePlayerCast(state, { spellId, timestamp }) {
   if (spellId === 'natures_swiftness' && timestamp < state.nsCooldownEndsAt)
     return state
 
-  // Swiftmend requires an active Rejuv or Regrowth to consume
+  // Swiftmend requires an active Rejuv or Regrowth on the selected target to consume
   if (spellId === 'swiftmend') {
     const hasConsumable = state.activeEffects.some(
-      (e) => e.spellId === 'rejuvenation' || e.spellId === 'regrowth',
+      (e) =>
+        (e.spellId === 'rejuvenation' || e.spellId === 'regrowth') &&
+        e.targetId === state.selectedTargetId,
     )
     if (!hasConsumable) return state
   }
@@ -66,10 +99,14 @@ function handlePlayerCast(state, { spellId, timestamp }) {
   const consumeNs = state.nsActive && spellId !== 'natures_swiftness'
 
   // --- Build the shared next-state fragment ---
+  const targetId =
+    spellId === 'natures_swiftness' ? null : state.selectedTargetId
+
   const castEntry = {
     timestamp,
     type: 'CAST_START',
     spellId,
+    targetId,
     instant: effectiveCastTime === 0,
   }
 
@@ -94,13 +131,18 @@ function handlePlayerCast(state, { spellId, timestamp }) {
 
   // --- Instant cast: apply effect right now ---
   if (effectiveCastTime === 0) {
-    return applySpellEffect(baseState, spellId, timestamp)
+    return applySpellEffect(baseState, spellId, timestamp, targetId)
   }
 
   // --- Cast-time spell: open the cast bar ---
   return {
     ...baseState,
-    castBar: { spellId, startedAt: timestamp, duration: effectiveCastTime },
+    castBar: {
+      spellId,
+      startedAt: timestamp,
+      duration: effectiveCastTime,
+      targetId,
+    },
   }
 }
 
@@ -136,6 +178,7 @@ function handleTick(state, { timestamp }) {
           timestamp,
           type: 'HOT_TICK',
           spellId: effect.spellId,
+          targetId: effect.targetId,
           effectId: effect.id,
           amount: healPerTick,
           stacks: effect.stacks ?? 1,
@@ -151,6 +194,7 @@ function handleTick(state, { timestamp }) {
           timestamp,
           type: 'BLOOM',
           spellId: 'lifebloom',
+          targetId: effect.targetId,
           effectId: effect.id,
           amount: bloomAmount,
           stacks: effect.stacks ?? 1,
@@ -160,6 +204,7 @@ function handleTick(state, { timestamp }) {
         timestamp,
         type: 'HOT_EXPIRED',
         spellId: effect.spellId,
+        targetId: effect.targetId,
         effectId: effect.id,
       })
       // Effect is not pushed to newEffects — it's gone
@@ -172,11 +217,11 @@ function handleTick(state, { timestamp }) {
 
   // --- Check cast bar completion ---
   if (state.castBar !== null) {
-    const { spellId, startedAt, duration } = state.castBar
+    const { spellId, startedAt, duration, targetId } = state.castBar
 
     if (timestamp >= startedAt + duration) {
       newCastBar = null
-      newHistory.push({ timestamp, type: 'CAST_COMPLETE', spellId })
+      newHistory.push({ timestamp, type: 'CAST_COMPLETE', spellId, targetId })
 
       const spell = SPELL_DATA[spellId]
 
@@ -186,18 +231,22 @@ function handleTick(state, { timestamp }) {
           timestamp,
           type: 'HEAL',
           spellId,
+          targetId,
           amount: spell.directHeal,
         })
       }
 
       // HoT component begins on cast completion
       if (spell.isHot) {
-        // Remove existing instance (refresh scenario)
-        newEffects = newEffects.filter((e) => e.spellId !== spellId)
+        // Remove existing instance on same target (refresh scenario)
+        newEffects = newEffects.filter(
+          (e) => !(e.spellId === spellId && e.targetId === targetId),
+        )
         const newEffectId = nextEffectId++
         newEffects.push({
           id: newEffectId,
           spellId,
+          targetId,
           appliedAt: timestamp,
           duration: spell.duration,
           tickInterval: spell.tickInterval,
@@ -208,6 +257,7 @@ function handleTick(state, { timestamp }) {
           timestamp,
           type: 'HOT_APPLIED',
           spellId,
+          targetId,
           effectId: newEffectId,
         })
       }
@@ -231,15 +281,16 @@ function handleTick(state, { timestamp }) {
 //
 // Private helper for instant casts. Applies spell-specific side effects
 // to state and returns the new state. Each case is self-contained.
-function applySpellEffect(state, spellId, timestamp) {
+function applySpellEffect(state, spellId, timestamp, targetId) {
   const spell = SPELL_DATA[spellId]
   let { activeEffects, nextEffectId, castHistory } = state
   const newHistory = []
 
   switch (spellId) {
     case 'lifebloom': {
+      // Refresh/stack only if there's an existing Lifebloom on the same target
       const existingIdx = activeEffects.findIndex(
-        (e) => e.spellId === 'lifebloom',
+        (e) => e.spellId === 'lifebloom' && e.targetId === targetId,
       )
 
       if (existingIdx >= 0) {
@@ -260,6 +311,7 @@ function applySpellEffect(state, spellId, timestamp) {
           timestamp,
           type: 'HOT_REFRESHED',
           spellId: 'lifebloom',
+          targetId,
           effectId: existing.id,
           stacks: updated.stacks,
         })
@@ -270,6 +322,7 @@ function applySpellEffect(state, spellId, timestamp) {
           {
             id: newEffectId,
             spellId: 'lifebloom',
+            targetId,
             appliedAt: timestamp,
             duration: spell.duration,
             tickInterval: spell.tickInterval,
@@ -281,6 +334,7 @@ function applySpellEffect(state, spellId, timestamp) {
           timestamp,
           type: 'HOT_APPLIED',
           spellId: 'lifebloom',
+          targetId,
           effectId: newEffectId,
           stacks: 1,
         })
@@ -289,17 +343,20 @@ function applySpellEffect(state, spellId, timestamp) {
     }
 
     case 'rejuvenation': {
-      // Refreshing Rejuv removes the old instance and starts a fresh one
+      // Refreshing Rejuv removes the old instance on the same target and starts a fresh one
       const existingId = activeEffects.find(
-        (e) => e.spellId === 'rejuvenation',
+        (e) => e.spellId === 'rejuvenation' && e.targetId === targetId,
       )?.id
-      activeEffects = activeEffects.filter((e) => e.spellId !== 'rejuvenation')
+      activeEffects = activeEffects.filter(
+        (e) => !(e.spellId === 'rejuvenation' && e.targetId === targetId),
+      )
       const newEffectId = nextEffectId++
       activeEffects = [
         ...activeEffects,
         {
           id: newEffectId,
           spellId: 'rejuvenation',
+          targetId,
           appliedAt: timestamp,
           duration: spell.duration,
           tickInterval: spell.tickInterval,
@@ -313,15 +370,20 @@ function applySpellEffect(state, spellId, timestamp) {
         timestamp,
         type: eventType,
         spellId: 'rejuvenation',
+        targetId,
         effectId: newEffectId,
       })
       break
     }
 
     case 'swiftmend': {
-      // Consume the most recently applied Rejuv or Regrowth
+      // Consume the most recently applied Rejuv or Regrowth on the selected target
       const candidates = activeEffects
-        .filter((e) => e.spellId === 'rejuvenation' || e.spellId === 'regrowth')
+        .filter(
+          (e) =>
+            (e.spellId === 'rejuvenation' || e.spellId === 'regrowth') &&
+            e.targetId === targetId,
+        )
         .sort((a, b) => b.appliedAt - a.appliedAt)
       const consumed = candidates[0]
 
@@ -335,12 +397,14 @@ function applySpellEffect(state, spellId, timestamp) {
           timestamp,
           type: 'HOT_CONSUMED',
           spellId: consumed.spellId,
+          targetId,
           effectId: consumed.id,
         })
         newHistory.push({
           timestamp,
           type: 'HEAL',
           spellId: 'swiftmend',
+          targetId,
           amount: healAmount,
         })
       }

@@ -8,6 +8,7 @@ body {
   aspect-ratio: 16 / 9;
   position: relative;
   width: 100%;
+  overflow: hidden;
 }
 .layout::before {
   content: '';
@@ -18,7 +19,7 @@ body {
   left: -5%;
   background: no-repeat url('/karazhan-banquet-hall.jpg');
   background-size: cover;
-  filter: blur(8px);
+  filter: blur(3px);
   z-index: -1;
 }
 
@@ -43,16 +44,16 @@ body {
   bottom: 0;
   left: 0;
 }
-.layout__hottracker {
+.layout__buffs {
   position: absolute;
   top: 0;
   right: 0;
   left: 75%;
   bottom: 95%;
-  /* background: rgba(0, 0, 255, 0.5); */
 }
-.layout__target {
+.layout__partyframes {
   position: absolute;
-  min-width: 10%;
-  min-height: 10%;
+  top: 40%;
+  left: 20%; /* (100% - 60%) / 2 */
+  width: 60%;
 }

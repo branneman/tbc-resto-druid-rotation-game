@@ -5,6 +5,7 @@ import ActionBar from './components/ActionBar'
 import CastBar from './components/CastBar'
 import CombatLog from './components/CombatLog'
 import FloatingCombatText from './components/FloatingCombatText'
+import PartyFrames from './components/PartyFrames'
 
 function App() {
   const [state, dispatch] = useReducer(
@@ -26,13 +27,17 @@ function App() {
         {state.castBar !== null ? <CastBar state={state} /> : ''}
       </div>
       <div className='layout__combatlog'>
-        <CombatLog castHistory={state.castHistory} />
+        <CombatLog castHistory={state.castHistory} targets={state.targets} />
       </div>
-      <div className='layout__hottracker'>
-        <HoTTracker />
+      <div className='layout__buffs'>
+        <Buffs />
       </div>
-      <div className='layout__target' style={{ top: '35%', left: '45%' }}>
+      <div className='layout__partyframes'>
         <FloatingCombatText castHistory={state.castHistory} />
+        <PartyFrames state={state} dispatch={dispatch} />
+      </div>
+      <div className='layout__lifebloomtracker'>
+        <LifebloomTracker />
       </div>
       {/* <pre style={{ fontFamily: 'monospace' }}>
         {JSON.stringify(state, null, 2)}
@@ -41,8 +46,11 @@ function App() {
   )
 }
 
-// maps over activeEffects, shows remaining duration via `(appliedAt + duration) - now`
-function HoTTracker() {
+function Buffs() {
+  return <></>
+}
+
+function LifebloomTracker() {
   return <></>
 }
 
