@@ -1,5 +1,7 @@
 import { SPELL_DATA } from './spelldata.js'
 
+const QUEUE_WINDOW = 400 // ms; accept spell inputs this early before cast/GCD ends
+
 export const TARGETS = [
   {
     id: 'melee',
@@ -31,6 +33,7 @@ export const INITIAL_STATE = {
   gameTime: 0, // raw rAF timestamp; updated every TICK
   castBar: null, // { spellId, startedAt, duration, targetId } | null
   gcdEndsAt: 0, // absolute rAF timestamp when GCD expires
+  queuedSpell: null, // { spellId, targetId } | null — queued in the last QUEUE_WINDOW ms
   activeEffects: [], // [{ id, spellId, targetId, appliedAt, duration, tickInterval, ticksFired, stacks }]
   mana: 7000,
   maxMana: 7000,
@@ -63,6 +66,20 @@ export function gameReducer(state, action) {
 function handlePlayerCast(state, { spellId, timestamp }) {
   const spell = SPELL_DATA[spellId]
   if (!spell) return state
+
+  // --- Spell queue window (not applicable to NS, which is off-GCD) ---
+  if (spellId !== 'natures_swiftness') {
+    const castEndsAt = state.castBar
+      ? state.castBar.startedAt + state.castBar.duration
+      : 0
+    const blockedUntil = Math.max(castEndsAt, state.gcdEndsAt)
+    const timeUntilFree = blockedUntil - timestamp
+
+    if (timeUntilFree > 0 && timeUntilFree <= QUEUE_WINDOW) {
+      // Last press wins — overwrite any previously queued spell
+      return { ...state, queuedSpell: { spellId, targetId: state.selectedTargetId } }
+    }
+  }
 
   // --- Validation (return unchanged state = swallow the input) ---
 
@@ -113,6 +130,7 @@ function handlePlayerCast(state, { spellId, timestamp }) {
   const baseState = {
     ...state,
     mana: state.mana - spell.manaCost,
+    queuedSpell: null,
     // NS: activating it sets the flag; casting anything else clears it
     nsActive:
       spellId === 'natures_swiftness'
@@ -264,7 +282,7 @@ function handleTick(state, { timestamp }) {
     }
   }
 
-  return {
+  let nextState = {
     ...state,
     gameTime: timestamp,
     castBar: newCastBar,
@@ -275,6 +293,17 @@ function handleTick(state, { timestamp }) {
         ? [...state.castHistory, ...newHistory]
         : state.castHistory,
   }
+
+  // Flush queued spell as soon as cast bar and GCD are both clear
+  if (nextState.queuedSpell && nextState.castBar === null && timestamp >= nextState.gcdEndsAt) {
+    const { spellId, targetId } = nextState.queuedSpell
+    nextState = handlePlayerCast(
+      { ...nextState, selectedTargetId: targetId, queuedSpell: null },
+      { spellId, timestamp },
+    )
+  }
+
+  return nextState
 }
 
 // applySpellEffect

@@ -4,7 +4,7 @@ import './index.css'
 
 export default function ActionBar({ state, dispatch }) {
   const enabled = state.gameTime >= state.gcdEndsAt
-  const props = { dispatch, enabled }
+  const props = { dispatch, enabled, gcdEndsAt: state.gcdEndsAt }
 
   return (
     <div className='ActionBar'>
@@ -42,7 +42,7 @@ export default function ActionBar({ state, dispatch }) {
   )
 }
 
-function ActionBarButton({ spellId, name, shortcut, dispatch, enabled }) {
+function ActionBarButton({ spellId, name, shortcut, dispatch, enabled, gcdEndsAt }) {
   const onKeyPress = () =>
     dispatch({
       type: 'PLAYER_CAST',
@@ -60,7 +60,7 @@ function ActionBarButton({ spellId, name, shortcut, dispatch, enabled }) {
         backgroundImage: `url('/icons/${spellId}.jpg')`,
       }}
     >
-      {enabled ? '' : <div className='GCDOverlay'></div>}
+      {enabled ? '' : <div key={gcdEndsAt} className='GCDOverlay'></div>}
       <span className='ActionBarButton__shortcut'>{shortcut}</span>
       <span className='ActionBarButton__name'>{name}</span>
     </div>
