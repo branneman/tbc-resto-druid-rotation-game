@@ -6,6 +6,7 @@ import CastBar from './components/CastBar'
 import CombatLog from './components/CombatLog'
 import ControlPanel from './components/ControlPanel'
 import ErrorText from './components/ErrorText'
+import LifebloomTracker from './components/LifebloomTracker'
 import PartyFrames from './components/PartyFrames'
 
 function App() {
@@ -25,6 +26,13 @@ function App() {
         <ControlPanel infiniteMana={state.infiniteMana} dispatch={dispatch} />
       </div>
       <ErrorText castHistory={state.castHistory} />
+      <div className='layout__lifebloomtracker'>
+        <LifebloomTracker
+          activeEffects={state.activeEffects}
+          gameTime={state.gameTime}
+          targets={state.targets}
+        />
+      </div>
       <div className='layout__actionbar'>
         <ActionBar state={state} dispatch={dispatch} />
       </div>
@@ -40,18 +48,14 @@ function App() {
       <div className='layout__partyframes'>
         <PartyFrames state={state} dispatch={dispatch} />
       </div>
-      <div className='layout__lifebloomtracker'>
-        <LifebloomTracker />
-      </div>
+      {/* <div style={{ position: 'absolute', overflow: 'scroll' }}>
+        <pre>{JSON.stringify(state, null, 2)}</pre>
+      </div> */}
     </>
   )
 }
 
 function Buffs() {
-  return <></>
-}
-
-function LifebloomTracker() {
   return <></>
 }
 

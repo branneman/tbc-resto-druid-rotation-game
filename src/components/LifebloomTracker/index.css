@@ -1,0 +1,67 @@
+.LifebloomTracker {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+}
+
+.LifebloomTracker__bar {
+  position: relative;
+  aspect-ratio: 7 / 1;
+  background-color: #0e1a0e;
+  border: 1px solid #2a4a2a;
+  overflow: hidden;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px #000;
+}
+
+.LifebloomTracker__fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: #1a6b1a
+    linear-gradient(0deg, #1a6b1a 0%, #28932a 50%, #1e7d20 100%);
+}
+
+.LifebloomTracker__name {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.LifebloomTracker__time {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.LifebloomTracker__bar--red,
+.LifebloomTracker__bar--orange,
+.LifebloomTracker__bar--yellow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2%;
+}
+.LifebloomTracker__bar--red {
+  /* in the 7s window: at 6s */
+  left: 14.28%; /* (100%/7) */
+  background: red;
+}
+.LifebloomTracker__bar--orange {
+  /* in the 7s window: at 6s minus 1 gcd */
+  left: 21.42%; /* (100/7)*1.5 */
+  background: orange;
+}
+.LifebloomTracker__bar--yellow {
+  /* in the 7s window: at 6s minus 2s for regrowth cast */
+  left: 28.57%; /* (100/7)*2 */
+  background: yellow;
+}

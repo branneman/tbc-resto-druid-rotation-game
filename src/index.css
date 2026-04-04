@@ -26,6 +26,12 @@ body {
   left: 50%;
   transform: translateX(-50%);
 }
+.layout__lifebloomtracker {
+  position: absolute;
+  top: 75%;
+  left: 66%;
+  width: 15%;
+}
 .layout__actionbar {
   position: absolute;
   top: 75%;
