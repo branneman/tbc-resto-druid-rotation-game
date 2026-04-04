@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import Icon from '../Icon'
 import { SPELL_DATA } from '../../reducers/spelldata.js'
 import './index.css'
 

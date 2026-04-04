@@ -1,5 +1,4 @@
 import { useKeySequenceDetector } from '../../hooks/dom.js'
-import Icon from '../Icon'
 import './index.css'
 
 export default function ActionBar({ state, dispatch }) {
@@ -42,7 +41,14 @@ export default function ActionBar({ state, dispatch }) {
   )
 }
 
-function ActionBarButton({ spellId, name, shortcut, dispatch, enabled, gcdEndsAt }) {
+function ActionBarButton({
+  spellId,
+  name,
+  shortcut,
+  dispatch,
+  enabled,
+  gcdEndsAt,
+}) {
   const onKeyPress = () =>
     dispatch({
       type: 'PLAYER_CAST',
