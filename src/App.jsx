@@ -4,6 +4,8 @@ import { gameReducer, INITIAL_STATE } from './reducers/game.js'
 import ActionBar from './components/ActionBar'
 import CastBar from './components/CastBar'
 import CombatLog from './components/CombatLog'
+import ControlPanel from './components/ControlPanel'
+import ErrorText from './components/ErrorText'
 import PartyFrames from './components/PartyFrames'
 
 function App() {
@@ -19,6 +21,10 @@ function App() {
 
   return (
     <>
+      <div className='layout__controlpanel'>
+        <ControlPanel infiniteMana={state.infiniteMana} dispatch={dispatch} />
+      </div>
+      <ErrorText castHistory={state.castHistory} />
       <div className='layout__actionbar'>
         <ActionBar state={state} dispatch={dispatch} />
       </div>
@@ -37,9 +43,6 @@ function App() {
       <div className='layout__lifebloomtracker'>
         <LifebloomTracker />
       </div>
-      {/* <pre style={{ fontFamily: 'monospace' }}>
-        {JSON.stringify(state, null, 2)}
-      </pre> */}
     </>
   )
 }

@@ -35,8 +35,9 @@ export const INITIAL_STATE = {
   gcdEndsAt: 0, // absolute rAF timestamp when GCD expires
   queuedSpell: null, // { spellId, targetId } | null — queued in the last QUEUE_WINDOW ms
   activeEffects: [], // [{ id, spellId, targetId, appliedAt, duration, tickInterval, ticksFired, stacks }]
-  mana: 7000,
+  mana: Infinity,
   maxMana: 7000,
+  infiniteMana: true,
   nsActive: false, // Nature's Swiftness buff is up; next spell is instant
   nsCooldownEndsAt: 0,
   castHistory: [], // append-only event log; every game event is pushed here
@@ -53,6 +54,14 @@ export function gameReducer(state, action) {
       return handleTick(state, action)
     case 'SELECT_TARGET':
       return { ...state, selectedTargetId: action.targetId }
+    case 'TOGGLE_INFINITE_MANA': {
+      const infiniteMana = !state.infiniteMana
+      return {
+        ...state,
+        infiniteMana,
+        mana: infiniteMana ? Infinity : state.maxMana,
+      }
+    }
     default:
       return state
   }
@@ -89,7 +98,15 @@ function handlePlayerCast(state, { spellId, timestamp }) {
   // Can't begin a new cast while one is already channeling
   if (state.castBar !== null) return state
 
-  if (state.mana < spell.manaCost) return state
+  if (state.mana < spell.manaCost) {
+    return {
+      ...state,
+      castHistory: [
+        ...state.castHistory,
+        { timestamp, type: 'OUT_OF_MANA', spellId },
+      ],
+    }
+  }
 
   if (spellId === 'natures_swiftness' && timestamp < state.nsCooldownEndsAt)
     return state

@@ -1,0 +1,16 @@
+.ControlPanel {
+  margin-top: -3%;
+  padding: 5%;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 10%;
+  color: white;
+  font-size: 12px;
+}
+.ControlPanel label {
+  display: flex;
+  cursor: pointer;
+}
+.ControlPanel__labeltext {
+  min-width: 90px;
+  padding: 5%;
+}

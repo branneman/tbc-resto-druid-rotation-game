@@ -20,6 +20,12 @@ body {
   z-index: -1;
 }
 
+.layout__controlpanel {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
 .layout__actionbar {
   position: absolute;
   top: 75%;

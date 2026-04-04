@@ -26,7 +26,7 @@ export default function CombatLog({ castHistory, targets }) {
     <div className='CombatLog' ref={scrollRef}>
       <ol className='CombatLog__list'>
         {filteredCastHistory.map((cast) => {
-          const key = `${cast.timestamp}-${cast.type}-${cast.spellId}`
+          const key = `${cast.timestamp}-${cast.type}-${cast.spellId}-${cast.targetId}`
           return (
             <li key={key} className='CombatLog__listitem'>
               {cast.stringify}
