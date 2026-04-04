@@ -1,6 +1,6 @@
 .FloatingCombatText {
   position: absolute;
-  inset: 0;
+  inset: -50% 0 50% 0;
   pointer-events: none;
   font-family: 'Cinzel', serif;
 }

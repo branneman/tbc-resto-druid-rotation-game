@@ -1,9 +1,10 @@
+import FloatingCombatText from '../FloatingCombatText'
 import './index.css'
 
 const HOT_SPELL_IDS = ['lifebloom', 'rejuvenation', 'regrowth']
 
 export default function PartyFrames({ state, dispatch }) {
-  const { targets, selectedTargetId, activeEffects } = state
+  const { targets, selectedTargetId, activeEffects, castHistory } = state
 
   return (
     <div className='PartyFrames'>
@@ -13,6 +14,7 @@ export default function PartyFrames({ state, dispatch }) {
           target={target}
           isSelected={target.id === selectedTargetId}
           effects={activeEffects.filter((e) => e.targetId === target.id)}
+          castHistory={castHistory}
           onClick={() =>
             dispatch({ type: 'SELECT_TARGET', targetId: target.id })
           }
@@ -22,7 +24,7 @@ export default function PartyFrames({ state, dispatch }) {
   )
 }
 
-function PartyFrame({ target, isSelected, effects, onClick }) {
+function PartyFrame({ target, isSelected, effects, castHistory, onClick }) {
   const healthPct = (target.health / target.maxHealth) * 100
 
   return (
@@ -30,6 +32,7 @@ function PartyFrame({ target, isSelected, effects, onClick }) {
       className={`PartyFrame${isSelected ? ' PartyFrame--selected' : ''}`}
       onClick={onClick}
     >
+      <FloatingCombatText castHistory={castHistory} targetId={target.id} />
       <div className='PartyFrame__columns'>
         <div
           className='PartyFrame__icon'

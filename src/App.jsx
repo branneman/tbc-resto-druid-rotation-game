@@ -4,7 +4,6 @@ import { gameReducer, INITIAL_STATE } from './reducers/game.js'
 import ActionBar from './components/ActionBar'
 import CastBar from './components/CastBar'
 import CombatLog from './components/CombatLog'
-import FloatingCombatText from './components/FloatingCombatText'
 import PartyFrames from './components/PartyFrames'
 
 function App() {
@@ -33,7 +32,6 @@ function App() {
         <Buffs />
       </div>
       <div className='layout__partyframes'>
-        <FloatingCombatText castHistory={state.castHistory} />
         <PartyFrames state={state} dispatch={dispatch} />
       </div>
       <div className='layout__lifebloomtracker'>

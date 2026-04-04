@@ -1,13 +1,18 @@
 import { useState } from 'react'
 import './index.css'
 
-export default function FloatingCombatText({ castHistory }) {
+export default function FloatingCombatText({ castHistory, targetId }) {
   const [dismissed, setDismissed] = useState(() => new Set())
 
   const ALLOW_LIST = ['HOT_TICK', 'HEAL', 'BLOOM']
   const floaters = castHistory
     .map((entry, id) => ({ ...entry, id, ...slotFromId(id) }))
-    .filter((e) => ALLOW_LIST.includes(e.type) && !dismissed.has(e.id))
+    .filter(
+      (e) =>
+        ALLOW_LIST.includes(e.type) &&
+        e.targetId === targetId &&
+        !dismissed.has(e.id),
+    )
 
   return (
     <div className='FloatingCombatText'>
