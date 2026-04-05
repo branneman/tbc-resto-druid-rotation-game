@@ -1,0 +1,16 @@
+.HealingMeter {
+  padding: 4% 0;
+  color: white;
+  font-size: 14px;
+  background: rgba(0, 0, 0, 0.8);
+}
+.HealingMeter__row {
+  margin: 0 1%;
+  padding: 1% 4%;
+}
+.HealingMeter__label {
+  opacity: 0.8;
+}
+.HealingMeter__value {
+  font-weight: bold;
+}

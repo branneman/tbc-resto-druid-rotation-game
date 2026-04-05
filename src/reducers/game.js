@@ -40,6 +40,7 @@ export const INITIAL_STATE = {
   infiniteMana: true,
   nsActive: false, // Nature's Swiftness buff is up; next spell is instant
   nsCooldownEndsAt: 0,
+  sessionStartAt: 0, // rAF timestamp of the first TICK; used for early-session HPS clamping
   castHistory: [], // append-only event log; every game event is pushed here
   nextEffectId: 1, // auto-increment for stable effect identity
   targets: TARGETS,
@@ -301,6 +302,7 @@ function handleTick(state, { timestamp }) {
 
   let nextState = {
     ...state,
+    sessionStartAt: state.sessionStartAt === 0 ? timestamp : state.sessionStartAt,
     gameTime: timestamp,
     castBar: newCastBar,
     activeEffects: newEffects,

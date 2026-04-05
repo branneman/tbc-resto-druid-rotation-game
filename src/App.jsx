@@ -6,6 +6,7 @@ import CastBar from './components/CastBar'
 import CombatLog from './components/CombatLog'
 import ControlPanel from './components/ControlPanel'
 import ErrorText from './components/ErrorText'
+import HealingMeter from './components/HealingMeter'
 import LifebloomTracker from './components/LifebloomTracker'
 import PartyFrames from './components/PartyFrames'
 
@@ -26,13 +27,7 @@ function App() {
         <ControlPanel infiniteMana={state.infiniteMana} dispatch={dispatch} />
       </div>
       <ErrorText castHistory={state.castHistory} />
-      <div className='layout__lifebloomtracker'>
-        <LifebloomTracker
-          activeEffects={state.activeEffects}
-          gameTime={state.gameTime}
-          targets={state.targets}
-        />
-      </div>
+
       <div className='layout__actionbar'>
         <ActionBar state={state} dispatch={dispatch} />
       </div>
@@ -47,6 +42,20 @@ function App() {
       </div>
       <div className='layout__partyframes'>
         <PartyFrames state={state} dispatch={dispatch} />
+      </div>
+      <div className='layout__lifebloomtracker'>
+        <LifebloomTracker
+          activeEffects={state.activeEffects}
+          gameTime={state.gameTime}
+          targets={state.targets}
+        />
+      </div>
+      <div className='layout__healingmeter'>
+        <HealingMeter
+          castHistory={state.castHistory}
+          gameTime={state.gameTime}
+          sessionStartAt={state.sessionStartAt}
+        />
       </div>
       {/* <div style={{ position: 'absolute', overflow: 'scroll' }}>
         <pre>{JSON.stringify(state, null, 2)}</pre>

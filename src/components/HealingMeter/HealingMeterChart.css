@@ -1,0 +1,29 @@
+.HealingMeterChart {
+  display: block;
+  width: 100%;
+  margin: 5% 0 3% 0;
+  aspect-ratio: 3 / 1;
+}
+
+.HealingMeterChart__gridline {
+  stroke: rgba(255, 255, 255, 0.15);
+  stroke-width: 0.5;
+}
+
+.HealingMeterChart__label {
+  font-size: 7px;
+  fill: rgba(255, 255, 255, 0.6);
+  opacity: 0.8;
+}
+
+.HealingMeterChart__area {
+  fill: rgba(200, 60, 40, 0.4);
+}
+
+.HealingMeterChart__line {
+  fill: none;
+  stroke: rgb(220, 80, 50);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
