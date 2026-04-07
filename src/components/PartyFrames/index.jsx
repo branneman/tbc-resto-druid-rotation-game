@@ -36,7 +36,9 @@ function PartyFrame({ target, isSelected, effects, castHistory, onClick }) {
       <div className='PartyFrame__columns'>
         <div
           className='PartyFrame__icon'
-          style={{ backgroundImage: `url('/icons/${target.icon}.jpg')` }}
+          style={{
+            backgroundImage: `url('/tbc-resto-druid-rotation-game/icons/${target.icon}.jpg')`,
+          }}
         ></div>
         <div className='PartyFrame__rows'>
           <div className='PartyFrame__name'>{target.name}</div>
@@ -53,7 +55,9 @@ function PartyFrame({ target, isSelected, effects, castHistory, onClick }) {
                 <div
                   key={spellId}
                   className='PartyFrame__hot'
-                  style={{ backgroundImage: `url('/icons/${spellId}.jpg')` }}
+                  style={{
+                    backgroundImage: `url('/tbc-resto-druid-rotation-game/icons/${spellId}.jpg')`,
+                  }}
                   title={`${spellId}${effect.stacks > 1 ? ` x${effect.stacks}` : ''}`}
                 >
                   {effect.stacks > 1 && (

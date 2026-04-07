@@ -63,7 +63,7 @@ function ActionBarButton({
       onClick={() => onKeyPress()}
       {...(enabled ? {} : { disabled: 'disabled' })}
       style={{
-        backgroundImage: `url('/icons/${spellId}.jpg')`,
+        backgroundImage: `url('/tbc-resto-druid-rotation-game/icons/${spellId}.jpg')`,
       }}
     >
       {enabled ? '' : <div key={gcdEndsAt} className='GCDOverlay'></div>}

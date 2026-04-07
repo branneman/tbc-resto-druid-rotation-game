@@ -14,7 +14,8 @@ body {
   content: '';
   position: absolute;
   inset: -5%;
-  background: no-repeat url('/karazhan-banquet-hall.jpg');
+  background: no-repeat
+    url('/tbc-resto-druid-rotation-game/karazhan-banquet-hall.jpg');
   background-size: cover;
   filter: blur(3px);
   z-index: -1;

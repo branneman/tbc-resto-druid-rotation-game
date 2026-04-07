@@ -30,7 +30,7 @@ export default function CastBar({ state }) {
           <div
             className='CastBar__icon'
             style={{
-              backgroundImage: `url('/icons/${state.castBar.spellId}.jpg')`,
+              backgroundImage: `url('/tbc-resto-druid-rotation-game/icons/${state.castBar.spellId}.jpg')`,
             }}
           ></div>
           <div className='CastBar__bar' style={{ width: `${width}%` }}></div>
