@@ -49,8 +49,9 @@ export const SPELL_DATA = {
     castTime: 0,
     gcd: 1500,
     manaCost: 335,
-    // Consumes most recent Rejuv or Regrowth.
+    // Consumes the shortest-time-left Rejuv or Regrowth.
     // Heals for totalPossibleTicks × healPerTick of the consumed HoT.
+    cooldown: 15000, // 15s cooldown
   },
 
   natures_swiftness: {

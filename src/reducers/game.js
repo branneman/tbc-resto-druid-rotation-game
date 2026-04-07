@@ -40,6 +40,7 @@ export const INITIAL_STATE = {
   infiniteMana: true,
   nsActive: false, // Nature's Swiftness buff is up; next spell is instant
   nsCooldownEndsAt: 0,
+  swiftmendCooldownEndsAt: 0,
   sessionStartAt: 0, // rAF timestamp of the first TICK; used for early-session HPS clamping
   castHistory: [], // append-only event log; every game event is pushed here
   nextEffectId: 1, // auto-increment for stable effect identity
@@ -87,7 +88,10 @@ function handlePlayerCast(state, { spellId, timestamp }) {
 
     if (timeUntilFree > 0 && timeUntilFree <= QUEUE_WINDOW) {
       // Last press wins — overwrite any previously queued spell
-      return { ...state, queuedSpell: { spellId, targetId: state.selectedTargetId } }
+      return {
+        ...state,
+        queuedSpell: { spellId, targetId: state.selectedTargetId },
+      }
     }
   }
 
@@ -110,6 +114,9 @@ function handlePlayerCast(state, { spellId, timestamp }) {
   }
 
   if (spellId === 'natures_swiftness' && timestamp < state.nsCooldownEndsAt)
+    return state
+
+  if (spellId === 'swiftmend' && timestamp < state.swiftmendCooldownEndsAt)
     return state
 
   // Swiftmend requires an active Rejuv or Regrowth on the selected target to consume
@@ -160,6 +167,10 @@ function handlePlayerCast(state, { spellId, timestamp }) {
       spellId === 'natures_swiftness'
         ? timestamp + spell.cooldown
         : state.nsCooldownEndsAt,
+    swiftmendCooldownEndsAt:
+      spellId === 'swiftmend'
+        ? timestamp + spell.cooldown
+        : state.swiftmendCooldownEndsAt,
     // GCD: only triggered by spells that have one
     gcdEndsAt: spell.gcd > 0 ? timestamp + spell.gcd : state.gcdEndsAt,
     castHistory: [...state.castHistory, castEntry],
@@ -302,7 +313,8 @@ function handleTick(state, { timestamp }) {
 
   let nextState = {
     ...state,
-    sessionStartAt: state.sessionStartAt === 0 ? timestamp : state.sessionStartAt,
+    sessionStartAt:
+      state.sessionStartAt === 0 ? timestamp : state.sessionStartAt,
     gameTime: timestamp,
     castBar: newCastBar,
     activeEffects: newEffects,
@@ -314,7 +326,11 @@ function handleTick(state, { timestamp }) {
   }
 
   // Flush queued spell as soon as cast bar and GCD are both clear
-  if (nextState.queuedSpell && nextState.castBar === null && timestamp >= nextState.gcdEndsAt) {
+  if (
+    nextState.queuedSpell &&
+    nextState.castBar === null &&
+    timestamp >= nextState.gcdEndsAt
+  ) {
     const { spellId, targetId } = nextState.queuedSpell
     nextState = handlePlayerCast(
       { ...nextState, selectedTargetId: targetId, queuedSpell: null },
@@ -425,15 +441,21 @@ function applySpellEffect(state, spellId, timestamp, targetId) {
     }
 
     case 'swiftmend': {
-      // Consume the most recently applied Rejuv or Regrowth on the selected target
-      const candidates = activeEffects
-        .filter(
-          (e) =>
-            (e.spellId === 'rejuvenation' || e.spellId === 'regrowth') &&
-            e.targetId === targetId,
-        )
-        .sort((a, b) => b.appliedAt - a.appliedAt)
-      const consumed = candidates[0]
+      // Consume the Rejuv or Regrowth on the selected target that has the shortest time left
+      const candidates = activeEffects.filter(
+        (e) =>
+          (e.spellId === 'rejuvenation' || e.spellId === 'regrowth') &&
+          e.targetId === targetId,
+      )
+
+      let consumed = undefined
+      if (candidates.length > 0) {
+        consumed = candidates.reduce((min, cur) => {
+          const curRemaining = cur.appliedAt + cur.duration - timestamp
+          const minRemaining = min.appliedAt + min.duration - timestamp
+          return curRemaining < minRemaining ? cur : min
+        }, candidates[0])
+      }
 
       if (consumed) {
         const consumedSpell = SPELL_DATA[consumed.spellId]
