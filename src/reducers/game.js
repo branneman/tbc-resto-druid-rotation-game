@@ -1,4 +1,4 @@
-import { SPELL_DATA } from './spelldata.js'
+import { SPELL_DATA } from './spell/data.js'
 
 const QUEUE_WINDOW = 400 // ms; accept spell inputs this early before cast/GCD ends
 

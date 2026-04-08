@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { SPELL_DATA } from '../../reducers/spelldata.js'
+import { SPELL_DATA } from '../../reducers/spell/data.js'
 import './index.css'
 
 export default function CombatLog({ castHistory, targets }) {

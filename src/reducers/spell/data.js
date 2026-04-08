@@ -1,5 +1,4 @@
-// Approximate TBC values.
-// TODO: Add actual values for a Preraid BiS geared druid
+import { lifebloom, rejuvenation, regrowth } from './healamount.js'
 
 export const SPELL_DATA = {
   lifebloom: {
@@ -12,8 +11,8 @@ export const SPELL_DATA = {
     duration: 7000,
     tickInterval: 1000,
     maxStacks: 3,
-    healPerTick: 273, // per stack, multiplied at tick time
-    bloomHeal: 600, // per stack, at expiry
+    healPerTick: lifebloom.getLifebloomHealPerTick(), // per stack
+    bloomHeal: lifebloom.getLifebloomBloomHeal(), // per stack
   },
 
   // Rank 13
@@ -26,7 +25,7 @@ export const SPELL_DATA = {
     isHot: true,
     duration: 12000,
     tickInterval: 3000,
-    healPerTick: 888,
+    healPerTick: rejuvenation.getRejuvenationHealPerTick(),
   },
 
   // Rank 10
@@ -39,8 +38,8 @@ export const SPELL_DATA = {
     isHot: true,
     duration: 21000,
     tickInterval: 3000,
-    healPerTick: 350,
-    directHeal: 1200, // applied on cast completion
+    healPerTick: regrowth.getRegrowthHealPerTick(),
+    directHeal: regrowth.getRegrowthDirectHeal(),
   },
 
   swiftmend: {

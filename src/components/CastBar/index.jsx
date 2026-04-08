@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { SPELL_DATA } from '../../reducers/spelldata.js'
+import { SPELL_DATA } from '../../reducers/spell/data.js'
 import './index.css'
 
 export default function CastBar({ state }) {
