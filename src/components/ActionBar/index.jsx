@@ -12,12 +12,31 @@ export default function ActionBar({ state, dispatch }) {
 
   return (
     <div className='ActionBar'>
-      <ActionBarButton {...props} shortcut='1' spellId='lifebloom' name='Lifebloom' />
-      <ActionBarButton {...props} shortcut='2' spellId='rejuvenation' name='Rejuvenation' />
-      <ActionBarButton {...props} shortcut='3' spellId='regrowth' name='Regrowth' />
+      <ActionBarButton
+        {...props}
+        shortcut='1'
+        whSpellId='33763'
+        spellId='lifebloom'
+        name='Lifebloom'
+      />
+      <ActionBarButton
+        {...props}
+        shortcut='2'
+        whSpellId='26982'
+        spellId='rejuvenation'
+        name='Rejuvenation'
+      />
+      <ActionBarButton
+        {...props}
+        shortcut='3'
+        whSpellId='26980'
+        spellId='regrowth'
+        name='Regrowth'
+      />
       <ActionBarButton
         {...props}
         shortcut='4'
+        whSpellId='18562'
         spellId='swiftmend'
         name='Swiftmend'
         cooldownEndsAt={state.swiftmendCooldownEndsAt}
@@ -26,6 +45,7 @@ export default function ActionBar({ state, dispatch }) {
       <ActionBarButton
         {...props}
         shortcut='5'
+        whSpellId='17116'
         spellId='natures_swiftness'
         name={"Nature's Swiftness"}
         cooldownEndsAt={state.nsCooldownEndsAt}
@@ -37,6 +57,7 @@ export default function ActionBar({ state, dispatch }) {
 
 function ActionBarButton({
   spellId,
+  whSpellId,
   name,
   shortcut,
   dispatch,
@@ -58,9 +79,15 @@ function ActionBarButton({
   useKeySequenceDetector(shortcut, onKeyPress)
 
   return (
-    <div
+    <a
       className='ActionBarButton'
-      onClick={() => onKeyPress()}
+      href={`https://www.wowhead.com/tbc/spell=${whSpellId}`}
+      data-wowhead={`spell=${whSpellId}`}
+      onClick={(e) => {
+        // prevent link from activating, <a> is required for WH tooltips
+        e.preventDefault()
+        onKeyPress()
+      }}
       {...(enabled ? {} : { disabled: 'disabled' })}
       style={{
         backgroundImage: `url('/tbc-resto-druid-rotation-game/icons/${spellId}.jpg')`,
@@ -77,6 +104,6 @@ function ActionBarButton({
       )}
       <span className='ActionBarButton__shortcut'>{shortcut}</span>
       <span className='ActionBarButton__name'>{name}</span>
-    </div>
+    </a>
   )
 }

@@ -5,6 +5,12 @@
   aspect-ratio: 6 / 1;
 }
 
+a.ActionBarButton {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
 .ActionBarButton {
   position: relative;
   aspect-ratio: 1;
