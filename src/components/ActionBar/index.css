@@ -16,7 +16,7 @@
   cursor: pointer;
 }
 .ActionBarButton__shortcut {
-  z-index: 1;
+  z-index: 4;
   position: absolute;
   bottom: 0;
   left: 3px;
@@ -34,16 +34,23 @@
   inherits: false;
   initial-value: 0deg;
 }
+.CooldownOverlay,
 .GCDOverlay {
-  z-index: 2;
   position: absolute;
   inset: 0;
   --color: rgba(0, 0, 0, 0.85);
-  background-color: --color;
   background: conic-gradient(
     transparent calc(var(--angle)),
     var(--color) var(--angle)
   );
+}
+.CooldownOverlay {
+  z-index: 2;
+  animation: conic-effect linear 1;
+  animation-fill-mode: forwards;
+}
+.GCDOverlay {
+  z-index: 3;
   animation: conic-effect 1.5s linear 1;
 }
 @keyframes conic-effect {
