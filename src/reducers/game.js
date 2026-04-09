@@ -440,6 +440,47 @@ function applySpellEffect(state, spellId, timestamp, targetId) {
       break
     }
 
+    case 'regrowth': {
+      // Direct heal lands instantly
+      newHistory.push({
+        timestamp,
+        type: 'HEAL',
+        spellId: 'regrowth',
+        targetId,
+        amount: spell.directHeal,
+      })
+      // HoT component: replace any existing Regrowth on the same target
+      const existingRegrowthId = activeEffects.find(
+        (e) => e.spellId === 'regrowth' && e.targetId === targetId,
+      )?.id
+      activeEffects = activeEffects.filter(
+        (e) => !(e.spellId === 'regrowth' && e.targetId === targetId),
+      )
+      const newRegrowthId = nextEffectId++
+      activeEffects = [
+        ...activeEffects,
+        {
+          id: newRegrowthId,
+          spellId: 'regrowth',
+          targetId,
+          appliedAt: timestamp,
+          duration: spell.duration,
+          tickInterval: spell.tickInterval,
+          ticksFired: 0,
+          stacks: 1,
+        },
+      ]
+      newHistory.push({
+        timestamp,
+        type:
+          existingRegrowthId !== undefined ? 'HOT_REFRESHED' : 'HOT_APPLIED',
+        spellId: 'regrowth',
+        targetId,
+        effectId: newRegrowthId,
+      })
+      break
+    }
+
     case 'swiftmend': {
       // Consume the Rejuv or Regrowth on the selected target that has the shortest time left
       const candidates = activeEffects.filter(

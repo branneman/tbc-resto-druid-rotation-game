@@ -58,7 +58,7 @@ function App() {
         />
       </div>
       {/* <div style={{ position: 'absolute', overflow: 'scroll' }}>
-        <pre>{JSON.stringify(state, null, 2)}</pre>
+        <pre>{JSON.stringify(state.castHistory, null, 2)}</pre>
       </div> */}
     </>
   )
