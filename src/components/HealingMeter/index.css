@@ -9,8 +9,10 @@
   padding: 1% 4%;
 }
 .HealingMeter__label {
+  font-size: 1cqi;
   opacity: 0.8;
 }
 .HealingMeter__value {
+  font-size: 1cqi;
   font-weight: bold;
 }

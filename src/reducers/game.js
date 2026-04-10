@@ -13,7 +13,7 @@ export const TARGETS = [
   },
   {
     id: 'tank',
-    name: 'Yepge',
+    name: 'Nezz',
     role: 'tank',
     icon: 'protection',
     health: 12000,
@@ -21,7 +21,7 @@ export const TARGETS = [
   },
   {
     id: 'ranged',
-    name: 'Zeyal',
+    name: 'Zeya',
     role: 'ranged',
     icon: 'destruction',
     health: 6500,

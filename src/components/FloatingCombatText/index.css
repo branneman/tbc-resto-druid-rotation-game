@@ -1,6 +1,6 @@
 .FloatingCombatText {
   position: absolute;
-  inset: -50% 0 50% 0;
+  inset: -75% 0 75% 0;
   pointer-events: none;
   font-family: 'Cinzel', serif;
 }
@@ -11,7 +11,7 @@
   left: calc(50% + var(--x));
   transform: translateX(-50%);
   white-space: nowrap;
-  font-size: 36px;
+  font-size: 2.5cqi;
   color: #20c020;
   animation: fct-float 1.5s ease-out forwards;
 }
