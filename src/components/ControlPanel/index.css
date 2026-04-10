@@ -1,13 +1,14 @@
 .ControlPanel {
-  padding: 5%;
+  width: 100%;
   color: white;
 }
 .ControlPanel label {
   display: flex;
   cursor: pointer;
+  container-type: inline-size;
 }
 .ControlPanel__labeltext {
+  padding-top: 1cqi;
   white-space: nowrap;
-  font-size: 1cqi;
-  padding: 5%;
+  font-size: 14cqi;
 }

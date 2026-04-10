@@ -48,11 +48,12 @@
   display: flex;
   flex-direction: column;
   padding: 2px;
+  container-type: inline-size;
 }
 
 .PartyFrame__name {
   flex: 2;
-  font-size: 1cqi;
+  font-size: 12cqi;
   font-weight: bold;
   color: #fff;
   text-shadow: 1px 1px 1px #000;
@@ -123,7 +124,7 @@
   position: absolute;
   bottom: 0;
   right: 1px;
-  font-size: 1.1cqi;
+  font-size: 12cqi;
   font-weight: bold;
   color: #fff;
   text-shadow: 0 0 2px #000;

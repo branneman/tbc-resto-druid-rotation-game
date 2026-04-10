@@ -4,6 +4,7 @@
   flex-direction: column;
   gap: 2px;
   width: 100%;
+  container-type: inline-size;
 }
 
 .LifebloomTracker__bar {
@@ -13,7 +14,7 @@
   border: 1px solid #2a4a2a;
   overflow: hidden;
   color: #fff;
-  font-size: 1cqi;
+  font-size: 7.2cqi;
   font-weight: bold;
   text-shadow: 1px 1px 1px #000;
 }
@@ -29,10 +30,10 @@
 
 .LifebloomTracker__name {
   position: absolute;
-  inset: 0;
+  inset: 0 10% 0 35%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
 }
 
 .LifebloomTracker__time {
@@ -56,7 +57,7 @@
   background: red;
 }
 .LifebloomTracker__bar--orange {
-  /* in the 7s window: at 6s minus 1 gcd */
+  /* in the 7s window: at 6s minus a gcd */
   left: 21.42%; /* (100/7)*1.5 */
   background: orange;
 }

@@ -20,6 +20,7 @@ a.ActionBarButton {
   border: 1px solid black;
   font-size: 10px;
   cursor: pointer;
+  container-type: inline-size;
 }
 .ActionBarButton__shortcut {
   z-index: 4;
@@ -28,7 +29,7 @@ a.ActionBarButton {
   left: 3px;
   color: white;
   font-family: monospace;
-  font-size: 1cqi;
+  font-size: 35cqi;
   text-shadow: 0 0 3px black;
 }
 .ActionBarButton__name {

@@ -4,6 +4,7 @@
   inset: 0;
   background: rgba(0, 0, 0, 0.8);
   color: white;
+  container-type: inline-size;
 }
 .CombatLog__scroll {
   position: absolute;
@@ -16,7 +17,7 @@
 }
 .CombatLog__listitem {
   list-style: none;
-  font-size: 1cqi;
+  font-size: 3cqi;
 }
 .CombatLog__scrollBtn {
   position: absolute;
@@ -28,10 +29,10 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   background: rgba(0, 0, 0, 0.6);
   color: rgba(255, 255, 255, 0.2);
-  font-size: 0.95cqi;
+  font-size: 2.5cqi;
   cursor: pointer;
   line-height: 1;
-  padding: 0;
+  padding: 0.5% 0 0 0;
   transition:
     color 0.2s,
     border-color 0.2s;

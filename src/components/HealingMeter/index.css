@@ -7,12 +7,13 @@
 .HealingMeter__row {
   margin: 0 1%;
   padding: 1% 4%;
+  container-type: inline-size;
 }
 .HealingMeter__label {
-  font-size: 1cqi;
+  font-size: 8cqi;
   opacity: 0.8;
 }
 .HealingMeter__value {
-  font-size: 1cqi;
+  font-size: 8cqi;
   font-weight: bold;
 }
