@@ -93,6 +93,32 @@
   background-image: none;
   opacity: 0.2;
 }
+
+@property --angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+.DurationOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  --color: rgba(0, 0, 0, 0.75);
+  background: conic-gradient(
+    transparent calc(var(--angle)),
+    var(--color) var(--angle)
+  );
+  animation: conic-effect linear 1;
+  animation-fill-mode: forwards;
+}
+@keyframes conic-effect {
+  0% {
+    --angle: -1deg;
+  }
+  100% {
+    --angle: 360deg;
+  }
+}
 .PartyFrame__hot-stacks {
   position: absolute;
   bottom: 0;

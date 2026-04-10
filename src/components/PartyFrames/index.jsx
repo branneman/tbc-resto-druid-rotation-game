@@ -60,6 +60,11 @@ function PartyFrame({ target, isSelected, effects, castHistory, onClick }) {
                   }}
                   title={`${spellId}${effect.stacks > 1 ? ` x${effect.stacks}` : ''}`}
                 >
+                  <div
+                    key={effect.appliedAt}
+                    className='DurationOverlay'
+                    style={{ animationDuration: `${effect.duration}ms` }}
+                  />
                   {effect.stacks > 1 && (
                     <span className='PartyFrame__hot-stacks'>
                       {effect.stacks}
