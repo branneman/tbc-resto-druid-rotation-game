@@ -8,6 +8,7 @@ import ControlPanel from './components/ControlPanel'
 import ErrorText from './components/ErrorText'
 import HealingMeter from './components/HealingMeter'
 import LifebloomTracker from './components/LifebloomTracker'
+import Buffs from './components/Buffs'
 import PartyFrames from './components/PartyFrames'
 
 function App() {
@@ -27,7 +28,6 @@ function App() {
         <ControlPanel infiniteMana={state.infiniteMana} dispatch={dispatch} />
       </div>
       <ErrorText castHistory={state.castHistory} />
-
       <div className='layout__actionbar'>
         <ActionBar state={state} dispatch={dispatch} />
       </div>
@@ -62,10 +62,6 @@ function App() {
       </div> */}
     </>
   )
-}
-
-function Buffs() {
-  return <></>
 }
 
 export default App

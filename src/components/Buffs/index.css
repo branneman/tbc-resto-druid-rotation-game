@@ -1,0 +1,19 @@
+.Buffs {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-content: flex-start;
+  width: 100%;
+}
+
+.Buff {
+  flex: 0 0 8%;
+  aspect-ratio: 1;
+  margin: 0 1% 2%;
+  box-sizing: border-box;
+  background-size: cover;
+  border: 1px solid #555;
+  border-radius: 2px;
+  cursor: default;
+}
