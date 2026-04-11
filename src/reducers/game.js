@@ -1,4 +1,4 @@
-import { SPELL_DATA } from './spell/data.js'
+import { getSpellData } from './spell/data.js'
 
 const QUEUE_WINDOW = 400 // ms; accept spell inputs this early before cast/GCD ends
 
@@ -35,6 +35,8 @@ export const INITIAL_STATE = {
   gcdEndsAt: 0, // absolute rAF timestamp when GCD expires
   queuedSpell: null, // { spellId, targetId } | null — queued in the last QUEUE_WINDOW ms
   activeEffects: [], // [{ id, spellId, targetId, appliedAt, duration, tickInterval, ticksFired, stacks }]
+  spirit: 335,
+  healingpower: 1997,
   mana: Infinity,
   maxMana: 7000,
   infiniteMana: true,
@@ -64,6 +66,8 @@ export function gameReducer(state, action) {
         mana: infiniteMana ? Infinity : state.maxMana,
       }
     }
+    case 'SET_STAT':
+      return { ...state, [action.stat]: action.value }
     default:
       return state
   }
@@ -75,7 +79,8 @@ export function gameReducer(state, action) {
 //   - Applies the effect immediately (instant spells)
 //   - Sets the cast bar (cast-time spells)
 function handlePlayerCast(state, { spellId, timestamp }) {
-  const spell = SPELL_DATA[spellId]
+  const spellData = getSpellData(state.spirit, state.healingpower)
+  const spell = spellData[spellId]
   if (!spell) return state
 
   // --- Spell queue window (not applicable to NS, which is off-GCD) ---
@@ -200,6 +205,7 @@ function handlePlayerCast(state, { spellId, timestamp }) {
 //   2. Fire pending HoT ticks and remove expired effects
 //   3. Detect cast bar completion and apply the finished cast's effect
 function handleTick(state, { timestamp }) {
+  const spellData = getSpellData(state.spirit, state.healingpower)
   let newEffects = []
   let newHistory = []
   let nextEffectId = state.nextEffectId
@@ -211,7 +217,7 @@ function handleTick(state, { timestamp }) {
   // We store when an effect started and derive what *should have happened*
   // by comparing elapsed time to the tick interval on every frame.
   for (const effect of state.activeEffects) {
-    const spell = SPELL_DATA[effect.spellId]
+    const spell = spellData[effect.spellId]
     const elapsed = timestamp - effect.appliedAt
     const expectedTicks = Math.floor(elapsed / effect.tickInterval)
     const newTickCount = expectedTicks - effect.ticksFired
@@ -270,7 +276,7 @@ function handleTick(state, { timestamp }) {
       newCastBar = null
       newHistory.push({ timestamp, type: 'CAST_COMPLETE', spellId, targetId })
 
-      const spell = SPELL_DATA[spellId]
+      const spell = spellData[spellId]
 
       // Direct heal lands on cast completion (e.g. Regrowth initial)
       if (spell.directHeal) {
@@ -346,7 +352,8 @@ function handleTick(state, { timestamp }) {
 // Private helper for instant casts. Applies spell-specific side effects
 // to state and returns the new state. Each case is self-contained.
 function applySpellEffect(state, spellId, timestamp, targetId) {
-  const spell = SPELL_DATA[spellId]
+  const spellData = getSpellData(state.spirit, state.healingpower)
+  const spell = spellData[spellId]
   let { activeEffects, nextEffectId, castHistory } = state
   const newHistory = []
 
@@ -499,7 +506,7 @@ function applySpellEffect(state, spellId, timestamp, targetId) {
       }
 
       if (consumed) {
-        const consumedSpell = SPELL_DATA[consumed.spellId]
+        const consumedSpell = spellData[consumed.spellId]
         const totalTicks = consumed.duration / consumed.tickInterval
         const healAmount = totalTicks * consumedSpell.healPerTick
 

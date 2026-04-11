@@ -10,13 +10,6 @@ export const regrowth = {
   getRegrowthHealPerTick,
 }
 
-const HEALING_POWER = 1832
-const SPIRIT = 388
-
-// Tree of Life adds to effective healing power
-const TREE_OF_LIFE_HEALING_POWER = SPIRIT * 0.25
-const EFFECTIVE_HEALING_POWER = HEALING_POWER + TREE_OF_LIFE_HEALING_POWER
-
 // Improved Rejuvenation only touches Rejuvenation itself.
 // Multiplies the total heal.
 const IMPROVED_REJUVENATION = 1.15 // 3 × 5%
@@ -30,49 +23,53 @@ const GIFT_OF_NATURE = 1.1 // 5 × 2%
 // Regrowth's direct portion does not get it.
 const EMPOWERED_REJUVENATION = 1.2 // 5 × 4%
 
-export function getLifebloomHealPerTick() {
+export function getLifebloomHealPerTick(spirit, healingpower) {
   const TICKS = 7
   const HOT_COEFFICIENT = 0.5203 * EMPOWERED_REJUVENATION
 
   const baseHoT = 273
-  const extraHoT = EFFECTIVE_HEALING_POWER * HOT_COEFFICIENT
+  const effectiveHealingPower = healingpower + spirit * 0.25
+  const extraHoT = effectiveHealingPower * HOT_COEFFICIENT
 
   return Math.round(((baseHoT + extraHoT) / TICKS) * GIFT_OF_NATURE)
 }
 
-export function getLifebloomBloomHeal() {
+export function getLifebloomBloomHeal(spirit, healingpower) {
   const BLOOM_COEFFICIENT = 0.3431 * EMPOWERED_REJUVENATION
 
   const baseBloom = 600
-  const extraBloom = EFFECTIVE_HEALING_POWER * BLOOM_COEFFICIENT
+  const effectiveHealingPower = healingpower + spirit * 0.25
+  const extraBloom = effectiveHealingPower * BLOOM_COEFFICIENT
 
   return Math.round((baseBloom + extraBloom) * GIFT_OF_NATURE)
 }
 
-export function getRejuvenationHealPerTick() {
+export function getRejuvenationHealPerTick(spirit, healingpower) {
   const TICKS = 4
   const HOT_COEFFICIENT = 12 / 15
 
   const baseHoT = 1060
-  const extraHoT = EFFECTIVE_HEALING_POWER * HOT_COEFFICIENT
+  const effectiveHealingPower = healingpower + spirit * 0.25
+  const extraHoT = effectiveHealingPower * HOT_COEFFICIENT
 
   return Math.round(
     ((baseHoT + extraHoT) / TICKS) * GIFT_OF_NATURE * IMPROVED_REJUVENATION,
   )
 }
 
-export function getRegrowthDirectHeal() {
+export function getRegrowthDirectHeal(spirit, healingpower) {
   const DURATION = 21
   const DIRECT_COEFFICIENT =
     (DURATION / 15) * (DURATION / 15 / (DURATION / 15 + DURATION / 15))
 
   const baseDirect = 1323.5 // mid-point of 1253 – 1394
-  const extraDirect = EFFECTIVE_HEALING_POWER * DIRECT_COEFFICIENT
+  const effectiveHealingPower = healingpower + spirit * 0.25
+  const extraDirect = effectiveHealingPower * DIRECT_COEFFICIENT
 
   return Math.round((baseDirect + extraDirect) * GIFT_OF_NATURE)
 }
 
-export function getRegrowthHealPerTick() {
+export function getRegrowthHealPerTick(spirit, healingpower) {
   const TICKS = 7
   const CASTTIME = 2
   const DURATION = 21
@@ -80,7 +77,8 @@ export function getRegrowthHealPerTick() {
     (DURATION / 15) * (DURATION / 15 / (DURATION / 15 + CASTTIME / 3.5))
 
   const baseHoT = 1274
-  const extraHoT = EFFECTIVE_HEALING_POWER * HOT_COEFFICIENT
+  const effectiveHealingPower = healingpower + spirit * 0.25
+  const extraHoT = effectiveHealingPower * HOT_COEFFICIENT
 
   return Math.round(((baseHoT + extraHoT) / TICKS) * GIFT_OF_NATURE)
 }

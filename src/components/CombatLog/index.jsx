@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { SPELL_DATA } from '../../reducers/spell/data.js'
+import { SPELL_NAMES } from '../../reducers/spell/data.js'
 import './index.css'
 
 export default function CombatLog({ castHistory, targets }) {
@@ -70,7 +70,7 @@ function stringifyCast(cast, targets) {
   switch (cast.type) {
     case 'HOT_TICK':
     case 'HEAL':
-      return `Your ${SPELL_DATA[cast.spellId].name} heals ${targetName} for ${cast.amount}.`
+      return `Your ${SPELL_NAMES[cast.spellId]} heals ${targetName} for ${cast.amount}.`
     case 'BLOOM':
       return `${targetName}'s Lifebloom blooms for ${cast.amount}.`
     default:

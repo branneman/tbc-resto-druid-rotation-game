@@ -1,11 +1,15 @@
 import { useState } from 'react'
-import { SPELL_DATA } from '../../reducers/spell/data.js'
+import { getSpellData } from '../../reducers/spell/data.js'
 import './index.css'
 
 export default function CastBar({ state }) {
   const BAR_WIDTH_MAX_PERCENTAGE = 90 // %
 
-  const castTime = getSpell(state.castBar.spellId).castTime
+  const castTime = getSpell(
+    state.castBar.spellId,
+    state.spirit,
+    state.healingpower,
+  ).castTime
   const [secondsLeft, setSecondsLeft] = useState(castTime)
   const _secondsLeft = castTime - (state.gameTime - state.castBar.startedAt)
   if (_secondsLeft !== secondsLeft) setSecondsLeft(_secondsLeft)
@@ -42,6 +46,6 @@ export default function CastBar({ state }) {
   )
 }
 
-function getSpell(spellId) {
-  return SPELL_DATA[spellId]
+function getSpell(spellId, spirit, healingpower) {
+  return getSpellData(spirit, healingpower)[spellId]
 }

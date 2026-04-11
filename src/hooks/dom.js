@@ -5,6 +5,7 @@ export function useKeySequenceDetector(keySequence, onSequenceDetected) {
 
   useEffect(() => {
     const handleKeyDown = (e) => {
+      if (e.target.closest('input, textarea, select')) return
       const newTypedKeys = typedKeys + e.key
 
       if (newTypedKeys === keySequence) {

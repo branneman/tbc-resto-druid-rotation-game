@@ -1,14 +1,47 @@
 .ControlPanel {
   width: 100%;
-  color: white;
-}
-.ControlPanel label {
-  display: flex;
-  cursor: pointer;
   container-type: inline-size;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 1cqi;
+  color: white;
+  font-size: 1cqi;
 }
-.ControlPanel__labeltext {
-  padding-top: 1cqi;
-  white-space: nowrap;
-  font-size: 14cqi;
+.ControlPanel__row {
+  display: flex;
+  justify-content: space-between;
+  margin: 4cqi 6cqi 4cqi 5cqi;
+}
+.ControlPanel__label {
+  flex: 1;
+}
+.ControlPanel__control {
+  width: 25cqi;
+  padding-right: 3cqi;
+}
+.ControlPanel__control input {
+  font-size: 8.2cqi;
+}
+.ControlPanel__control input[type='checkbox'] {
+  appearance: none;
+  width: 8.2cqi;
+  height: 8.2cqi;
+  margin-left: 0;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 1px;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+}
+.ControlPanel__control input[type='checkbox']:checked::before {
+  content: '';
+  position: absolute;
+  inset: 15% 20%;
+  border-right: 0.15em solid white;
+  border-bottom: 0.15em solid white;
+  transform: rotate(45deg);
+  transform-origin: 65% 60%;
+}
+.ControlPanel__statinput {
+  width: 100%;
 }

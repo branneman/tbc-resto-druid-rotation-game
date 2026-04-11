@@ -11,8 +11,8 @@ A browser-based rotation trainer for TBC Resto Druid healing. The player practic
 
 The game is a pure Redux-style reducer driven by `requestAnimationFrame`:
 
-- `src/reducers/game.js` — all game logic; two actions: `PLAYER_CAST` and `TICK`
-- `src/reducers/spell/data.js` — static spell definitions
+- `src/reducers/game.js` — all game logic; actions: `PLAYER_CAST`, `TICK`, `SELECT_TARGET`, `TOGGLE_INFINITE_MANA`, `SET_STAT`
+- `src/reducers/spell/data.js` — spell definitions; exports `getSpellData(spirit, healingpower)` (full data with computed heal amounts) and `SPELL_NAMES` (static display names)
 - `src/App.jsx` — wires up `useReducer` + `useAnimationFrame`, passes state down as props
 - Components receive `state` + `dispatch` as props; no context, no global store
 
@@ -25,6 +25,7 @@ The game is a pure Redux-style reducer driven by `requestAnimationFrame`:
   gcdEndsAt,
   queuedSpell,               // { spellId, targetId } | null — queued in the last 400ms before GCD/cast ends
   activeEffects,             // [{ id, spellId, targetId, appliedAt, duration, tickInterval, ticksFired, stacks }]
+  spirit, healingpower,        // player stats; affect all heal amount calculations
   mana, maxMana, infiniteMana,
   nsActive,                  // Nature's Swiftness buff is up; next spell is instant
   nsCooldownEndsAt,
@@ -62,7 +63,7 @@ The root `.layout` div uses `aspect-ratio: 16/9; width: 100%; position: relative
 - `FloatingCombatText` — heal numbers that float up over each party frame
 - `LifebloomTracker` — shows countdown timers for all 3-stack Lifeblooms across targets
 - `HealingMeter` — total healing done, current HPS (10 s sliding window), bar chart breakdown by spell
-- `ControlPanel` — start/pause/reset controls
+- `ControlPanel` — infinite mana toggle, spirit and healing power inputs; dispatches `SET_STAT`
 - `ErrorText` — displays reducer error messages
 
 ## Other source files

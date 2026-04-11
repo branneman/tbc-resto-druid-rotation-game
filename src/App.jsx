@@ -25,7 +25,12 @@ function App() {
   return (
     <>
       <div className='layout__controlpanel'>
-        <ControlPanel infiniteMana={state.infiniteMana} dispatch={dispatch} />
+        <ControlPanel
+          infiniteMana={state.infiniteMana}
+          spirit={state.spirit}
+          healingpower={state.healingpower}
+          dispatch={dispatch}
+        />
       </div>
       <ErrorText castHistory={state.castHistory} />
       <div className='layout__actionbar'>
