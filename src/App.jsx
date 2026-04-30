@@ -1,4 +1,4 @@
-import { useReducer } from 'react'
+import { useReducer, useState } from 'react'
 import { useAnimationFrame } from './hooks/useAnimationFrame.js'
 import { gameReducer, INITIAL_STATE } from './reducers/game.js'
 import ActionBar from './components/ActionBar'
@@ -10,8 +10,10 @@ import HealingMeter from './components/HealingMeter'
 import LifebloomTracker from './components/LifebloomTracker'
 import Buffs from './components/Buffs'
 import PartyFrames from './components/PartyFrames'
+import Explainer from './components/Explainer'
 
 function App() {
+  const [showExplainer, setShowExplainer] = useState(true)
   const [state, dispatch] = useReducer(
     gameReducer,
     structuredClone(INITIAL_STATE),
@@ -65,6 +67,7 @@ function App() {
       {/* <div style={{ position: 'absolute', overflow: 'scroll' }}>
         <pre>{JSON.stringify(state.castHistory, null, 2)}</pre>
       </div> */}
+      {showExplainer && <Explainer onClose={() => setShowExplainer(false)} />}
     </>
   )
 }

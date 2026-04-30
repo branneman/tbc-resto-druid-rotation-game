@@ -65,6 +65,7 @@ The root `.layout` div uses `aspect-ratio: 16/9; width: 100%; position: relative
 - `HealingMeter` — total healing done, current HPS (10 s sliding window), bar chart breakdown by spell
 - `ControlPanel` — infinite mana toggle, spirit and healing power inputs; dispatches `SET_STAT`
 - `ErrorText` — displays reducer error messages
+- `Explainer` — full-screen overlay shown on every page load; explains the app and the 4GCD cycle with a rotation chart; dismissed via Start button or Escape key
 
 ## Other source files
 

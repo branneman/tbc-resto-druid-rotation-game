@@ -1,0 +1,223 @@
+.Explainer {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Explainer__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.Explainer__window {
+  position: relative;
+  z-index: 1;
+  width: 60%;
+  max-height: 70%;
+  overflow-y: auto;
+  background: rgba(10, 8, 5, 0.97);
+  border: 2px solid #6b5c3a;
+  border-radius: 4px;
+  padding: 3cqi 3.5cqi;
+  container-type: inline-size;
+  box-shadow:
+    0 0 40px rgba(0, 0, 0, 0.8),
+    inset 0 0 60px rgba(0, 0, 0, 0.5);
+}
+
+.Explainer__title {
+  font-family: 'Cinzel', serif;
+  font-size: 4cqi;
+  color: #ffd700;
+  margin: 0 0 2cqi;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+  letter-spacing: 0.05em;
+}
+
+.Explainer__section {
+  margin-bottom: 2.5cqi;
+}
+
+.Explainer__sectionTitle {
+  font-family: 'Cinzel', serif;
+  font-size: 2.5cqi;
+  color: #c8a85a;
+  margin: 0 0 1.2cqi;
+  padding-bottom: 0.5cqi;
+  border-bottom: 1px solid rgba(200, 168, 90, 0.3);
+}
+
+.Explainer__text {
+  font-size: 1.8cqi;
+  color: #c9bfa0;
+  line-height: 1.6;
+  margin: 0 0 1cqi;
+}
+.Explainer__text--muted {
+  opacity: 0.7;
+}
+
+.Explainer__text img {
+  width: 1.4cqi;
+  height: 1.4cqi;
+  margin-right: 0.2cqi;
+}
+
+.Explainer__text strong {
+  color: #e8d49a;
+}
+
+.Explainer__footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 2cqi;
+}
+
+.Explainer__start {
+  font-family: 'Cinzel', serif;
+  font-size: 2.5cqi;
+  color: #1a1a0a;
+  background: linear-gradient(180deg, #ffd700 0%, #c8a828 100%);
+  border: 2px solid #8b7020;
+  border-radius: 3px;
+  padding: 0.6cqi 3cqi;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: filter 0.1s;
+}
+
+.Explainer__start:hover {
+  filter: brightness(1.15);
+}
+
+.Explainer__start:active {
+  filter: brightness(0.9);
+}
+
+.RotationChart {
+  margin-top: 1.5cqi;
+}
+
+.RotationChart__group {
+  margin-bottom: 2cqi;
+}
+
+.RotationChart__groupLabel {
+  font-family: 'Cinzel', serif;
+  font-size: 1.8cqi;
+  font-weight: bold;
+  color: #c8a85a;
+  margin-bottom: 0.5cqi;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.RotationChart__row {
+  display: flex;
+  align-items: stretch;
+  height: 2.8cqi;
+  margin-bottom: 0.4cqi;
+}
+
+.RotationChart__segments {
+  flex: 1;
+  display: flex;
+}
+
+.RotationChart__segment {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border-right: 1px solid rgba(0, 0, 0, 0.4);
+}
+
+.RotationChart__segmentIcon {
+  aspect-ratio: 1;
+  height: 100%;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.RotationChart__segmentLabel {
+  padding: 0 0.5cqi;
+  font-size: 1.6cqi;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #fff;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.9);
+}
+
+.RotationChart__remainder {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-left: none;
+}
+
+.RotationChart__rowMeta {
+  width: 8cqi;
+  display: flex;
+  align-items: center;
+  gap: 0.4cqi;
+  padding-left: 0.8cqi;
+  flex-shrink: 0;
+}
+
+.RotationChart__time {
+  font-size: 1.8cqi;
+  color: #c8a85a;
+}
+
+.RotationChart__risky {
+  font-size: 1.8cqi;
+}
+
+.RotationChart__axisWrapper {
+  display: flex;
+  margin-top: 0.3cqi;
+}
+
+.RotationChart__axis {
+  flex: 1;
+  position: relative;
+  height: 3cqi;
+  margin-left: -0.7cqi;
+}
+
+.RotationChart__axisMetaSpacer {
+  width: 8cqi;
+  flex-shrink: 0;
+}
+
+.RotationChart__tick {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateX(-50%);
+}
+
+.RotationChart__tick--first {
+  transform: translateX(0);
+}
+
+.RotationChart__tick--last {
+  transform: translateX(-100%);
+}
+
+.RotationChart__tickMark {
+  width: 1px;
+  height: 1cqi;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.RotationChart__tickLabel {
+  font-size: 1.4cqi;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 0.2cqi;
+}
