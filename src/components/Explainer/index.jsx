@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import './index.css'
 
 const ICON_PATH = '/tbc-resto-druid-rotation-game/icons/'
@@ -61,6 +61,19 @@ const ROTATIONS = [
 ]
 
 export default function Explainer({ onClose }) {
+  const windowRef = useRef(null)
+  const [atBottom, setAtBottom] = useState(false)
+
+  const checkScroll = useCallback(() => {
+    const el = windowRef.current
+    if (!el) return
+    setAtBottom(el.scrollTop + el.clientHeight >= el.scrollHeight - 4)
+  }, [])
+
+  useEffect(() => {
+    checkScroll()
+  }, [checkScroll])
+
   useEffect(() => {
     const handler = (e) => {
       if (e.key === 'Escape') onClose()
@@ -72,7 +85,7 @@ export default function Explainer({ onClose }) {
   return (
     <div className='Explainer'>
       <div className='Explainer__backdrop' />
-      <div className='Explainer__window'>
+      <div className='Explainer__window' ref={windowRef} onScroll={checkScroll}>
         <h1 className='Explainer__title'>WoW TBC Resto Druid Rotation Game</h1>
 
         <section className='Explainer__section'>
@@ -125,6 +138,10 @@ export default function Explainer({ onClose }) {
           </button>
         </div>
       </div>
+      <div
+        className={`Explainer__scrollHint${atBottom ? ' Explainer__scrollHint--hidden' : ''}`}
+        aria-hidden='true'
+      />
     </div>
   )
 }

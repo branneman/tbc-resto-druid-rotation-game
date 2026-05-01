@@ -2,9 +2,9 @@
   position: absolute;
   inset: 0;
   z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
+  container-type: inline-size;
 }
 
 .Explainer__backdrop {
@@ -14,12 +14,12 @@
 }
 
 .Explainer__window {
+  grid-area: 1 / 1;
   position: relative;
   z-index: 1;
   width: 60%;
   max-height: 70%;
-  overflow-y: auto;
-  background: rgba(10, 8, 5, 0.97);
+  overflow-y: scroll;
   border: 2px solid #6b5c3a;
   border-radius: 4px;
   padding: 3cqi 3.5cqi;
@@ -27,6 +27,30 @@
   box-shadow:
     0 0 40px rgba(0, 0, 0, 0.8),
     inset 0 0 60px rgba(0, 0, 0, 0.5);
+  background: rgba(10, 8, 5, 0.97);
+}
+
+.Explainer__scrollHint {
+  grid-area: 1 / 1;
+  align-self: end;
+  width: 67%;
+  height: 5cqi;
+  margin-bottom: 5.4cqi;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.9) 20%,
+    rgba(0, 0, 0, 0.5) 60%,
+    transparent 100%
+  );
+  border-radius: 0 0 4px 4px;
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity 0.3s;
+}
+
+.Explainer__scrollHint--hidden {
+  opacity: 0;
 }
 
 .Explainer__title {
