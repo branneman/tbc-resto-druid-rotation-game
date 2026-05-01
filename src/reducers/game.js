@@ -48,6 +48,7 @@ export const INITIAL_STATE = {
   nextEffectId: 1, // auto-increment for stable effect identity
   targets: TARGETS,
   selectedTargetId: 'tank',
+  mouseoverTargetId: null,
 }
 
 export function gameReducer(state, action) {
@@ -58,6 +59,8 @@ export function gameReducer(state, action) {
       return handleTick(state, action)
     case 'SELECT_TARGET':
       return { ...state, selectedTargetId: action.targetId }
+    case 'SET_MOUSEOVER':
+      return { ...state, mouseoverTargetId: action.targetId }
     case 'TOGGLE_INFINITE_MANA': {
       const infiniteMana = !state.infiniteMana
       return {
@@ -95,7 +98,10 @@ function handlePlayerCast(state, { spellId, timestamp }) {
       // Last press wins — overwrite any previously queued spell
       return {
         ...state,
-        queuedSpell: { spellId, targetId: state.selectedTargetId },
+        queuedSpell: {
+          spellId,
+          targetId: state.mouseoverTargetId ?? state.selectedTargetId,
+        },
       }
     }
   }
@@ -147,7 +153,9 @@ function handlePlayerCast(state, { spellId, timestamp }) {
 
   // --- Build the shared next-state fragment ---
   const targetId =
-    spellId === 'natures_swiftness' ? null : state.selectedTargetId
+    spellId === 'natures_swiftness'
+      ? null
+      : (state.mouseoverTargetId ?? state.selectedTargetId)
 
   const castEntry = {
     timestamp,

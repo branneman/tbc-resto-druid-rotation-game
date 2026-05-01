@@ -18,19 +18,35 @@ export default function PartyFrames({ state, dispatch }) {
           onClick={() =>
             dispatch({ type: 'SELECT_TARGET', targetId: target.id })
           }
+          onMouseEnter={() =>
+            dispatch({ type: 'SET_MOUSEOVER', targetId: target.id })
+          }
+          onMouseLeave={() =>
+            dispatch({ type: 'SET_MOUSEOVER', targetId: null })
+          }
         />
       ))}
     </div>
   )
 }
 
-function PartyFrame({ target, isSelected, effects, castHistory, onClick }) {
+function PartyFrame({
+  target,
+  isSelected,
+  effects,
+  castHistory,
+  onClick,
+  onMouseEnter,
+  onMouseLeave,
+}) {
   const healthPct = (target.health / target.maxHealth) * 100
 
   return (
     <div
       className={`PartyFrame${isSelected ? ' PartyFrame--selected' : ''}`}
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
       <FloatingCombatText castHistory={castHistory} targetId={target.id} />
       <div className='PartyFrame__columns'>
