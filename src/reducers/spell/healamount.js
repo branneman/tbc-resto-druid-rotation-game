@@ -21,8 +21,8 @@ const IMPROVED_REJUVENATION = 1.15 // 3 × 5%
 const GIFT_OF_NATURE = 1.1 // 5 × 2%
 
 // Empowered Rejuvenation multiplies the coefficient.
-// It applies to all periodic healing, so it's on every HoT coefficient and the bloom.
-// Also applies to the direct heal (Bloom) of Lifebloom and the direct portion of Regrowth.
+// It applies to every HoT coefficient and to the direct portion of Regrowth.
+// It does NOT apply to Lifebloom's bloom (per ingame testing).
 const EMPOWERED_REJUVENATION = 1.2 // 5 × 4%
 
 export function getLifebloomHealPerTick(spirit, healingpower) {
@@ -37,7 +37,9 @@ export function getLifebloomHealPerTick(spirit, healingpower) {
 }
 
 export function getLifebloomBloomHeal(spirit, healingpower) {
-  const BLOOM_COEFFICIENT = 0.3431 * EMPOWERED_REJUVENATION
+  // Direct share from the hybrid formula (CT=1.5, D=7), no ER applied.
+  // Theoretically should be: 0.3431 * EMPOWERED_REJUVENATION, but doesn't match ingame numbers
+  const BLOOM_COEFFICIENT = 0.4787
 
   const baseBloom = 600
   const effectiveHealingPower = healingpower + spirit * TREE_OF_LIFE
