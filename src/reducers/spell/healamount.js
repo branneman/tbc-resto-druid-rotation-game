@@ -48,7 +48,7 @@ export function getLifebloomBloomHeal(spirit, healingpower) {
 
 export function getRejuvenationHealPerTick(spirit, healingpower) {
   const TICKS = 4
-  const HOT_COEFFICIENT = 12 / 15
+  const HOT_COEFFICIENT = (12 / 15) * EMPOWERED_REJUVENATION
 
   const baseHoT = 1060
   const effectiveHealingPower = healingpower + spirit * TREE_OF_LIFE
