@@ -1,47 +1,58 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './index.css'
 
-export default function FloatingCombatText({ castHistory, targetId }) {
-  const [dismissed, setDismissed] = useState(() => new Set())
+const ALLOW_LIST = ['HOT_TICK', 'HEAL', 'BLOOM']
+const FADE_DELAY_MS = 600
+const BURST_WINDOW_MS = 100
 
-  const ALLOW_LIST = ['HOT_TICK', 'HEAL', 'BLOOM']
-  const floaters = castHistory
-    .map((entry, id) => ({ ...entry, id, ...slotFromId(id) }))
-    .filter(
-      (e) =>
-        ALLOW_LIST.includes(e.type) &&
-        e.targetId === targetId &&
-        !dismissed.has(e.id),
-    )
+export default function FloatingCombatText({ castHistory, targetId }) {
+  const [amount, setAmount] = useState(0)
+  const [fading, setFading] = useState(false)
+  const timerRef = useRef(null)
+  const burstStartRef = useRef(0)
+  const prevLengthRef = useRef(castHistory.length)
+
+  useEffect(() => {
+    const prevLen = prevLengthRef.current
+    prevLengthRef.current = castHistory.length
+
+    const newHeals = castHistory
+      .slice(prevLen)
+      .filter((e) => ALLOW_LIST.includes(e.type) && e.targetId === targetId)
+
+    if (newHeals.length === 0) return
+
+    const maxHeal = Math.max(...newHeals.map((e) => e.amount))
+    const now = Date.now()
+    const inBurst = now - burstStartRef.current < BURST_WINDOW_MS
+
+    if (inBurst) {
+      setAmount((prev) => Math.max(prev, maxHeal))
+    } else {
+      burstStartRef.current = now
+      setAmount(maxHeal)
+    }
+
+    setFading(false)
+    clearTimeout(timerRef.current)
+    timerRef.current = setTimeout(() => setFading(true), FADE_DELAY_MS)
+  }, [castHistory.length, targetId])
+
+  useEffect(() => () => clearTimeout(timerRef.current), [])
+
+  if (amount === 0) return null
 
   return (
     <div className='FloatingCombatText'>
-      {floaters.map((f) => (
-        <span
-          key={f.id}
-          className='FloatingCombatText__item'
-          style={{ '--x': `${f.x}px`, '--y': `${f.y}px` }}
-          onAnimationEnd={() =>
-            setDismissed((prev) => new Set([...prev, f.id]))
-          }
-        >
-          +{f.amount}
-        </span>
-      ))}
+      <span
+        className={`FloatingCombatText__item${fading ? ' FloatingCombatText__item--fading' : ''}`}
+        onAnimationEnd={() => {
+          setAmount(0)
+          setFading(false)
+        }}
+      >
+        +{amount}
+      </span>
     </div>
   )
-}
-
-// Four slots that stagger simultaneous heals into a staircase, matching
-// WoW FCT behaviour. Each slot has a different x (horizontal spread) and y
-// (starting height above the bottom). Slots cycle by event id so the layout
-// is deterministic and stable across re-renders.
-const SLOTS = [
-  { x: 0, y: 0 },
-  { x: 22, y: 20 },
-  { x: -18, y: 40 },
-  { x: 8, y: 60 },
-]
-function slotFromId(id) {
-  return SLOTS[id % SLOTS.length]
 }

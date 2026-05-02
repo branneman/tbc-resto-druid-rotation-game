@@ -1,32 +1,39 @@
 .FloatingCombatText {
   position: absolute;
-  inset: -75% 0 75% 0;
+  left: 0;
+  top: 0;
+  height: 100%;
+  aspect-ratio: 1;
   pointer-events: none;
-  font-family: 'Cinzel', serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
   container-type: inline-size;
 }
 
 .FloatingCombatText__item {
-  position: absolute;
-  bottom: var(--y);
-  left: calc(50% + var(--x));
-  transform: translateX(-50%);
-  white-space: nowrap;
-  font-size: 20cqi;
+  font-family: 'Cinzel', serif;
+  font-size: 30cqi;
+  font-weight: bold;
   color: #20c020;
-  animation: fct-float 1.5s ease-out forwards;
+  text-shadow:
+    1px 1px 0 #000,
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000;
+  white-space: nowrap;
 }
 
-@keyframes fct-float {
-  0% {
+.FloatingCombatText__item--fading {
+  animation: fct-fade 0.8s ease-out forwards;
+}
+
+@keyframes fct-fade {
+  from {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
   }
-  20% {
-    opacity: 1;
-  }
-  100% {
+  to {
     opacity: 0;
-    transform: translateX(-50%) translateY(-60px);
   }
 }
