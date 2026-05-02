@@ -54,9 +54,9 @@ body::after {
 }
 .layout__partyframes {
   position: absolute;
-  top: 40%;
-  left: 20%; /* (100% - 60%) / 2 */
-  width: 60%;
+  top: 20%;
+  left: 19%;
+  width: 11%;
 }
 .layout__lifebloomtracker {
   position: absolute;

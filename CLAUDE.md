@@ -11,7 +11,7 @@ A browser-based rotation trainer for TBC Resto Druid healing. The player practic
 
 The game is a pure Redux-style reducer driven by `requestAnimationFrame`:
 
-- `src/reducers/game.js` — all game logic; actions: `PLAYER_CAST`, `TICK`, `SELECT_TARGET`, `TOGGLE_INFINITE_MANA`, `SET_STAT`
+- `src/reducers/game.js` — all game logic; actions: `PLAYER_CAST`, `TICK`, `SELECT_TARGET`, `SET_MOUSEOVER`, `TOGGLE_INFINITE_MANA`, `SET_STAT`
 - `src/reducers/spell/data.js` — spell definitions; exports `getSpellData(spirit, healingpower)` (full data with computed heal amounts) and `SPELL_NAMES` (static display names)
 - `src/App.jsx` — wires up `useReducer` + `useAnimationFrame`, passes state down as props
 - Components receive `state` + `dispatch` as props; no context, no global store
@@ -33,8 +33,9 @@ The game is a pure Redux-style reducer driven by `requestAnimationFrame`:
   sessionStartAt,            // rAF timestamp of first TICK; used for early-session HPS clamping
   castHistory,               // append-only event log; every game event is pushed here
   nextEffectId,              // auto-increment for stable effect identity
-  targets,                   // [{ id, name, role, icon, health, maxHealth }]
+  targets,                   // [{ id, name, icon, health, maxHealth, isPlayer?, resource, currentResource?, maxResource? }]
   selectedTargetId,
+  mouseoverTargetId,         // set by SET_MOUSEOVER; spells target this over selectedTargetId when non-null
 }
 ```
 
@@ -45,6 +46,7 @@ The game is a pure Redux-style reducer driven by `requestAnimationFrame`:
 - **Lifebloom**: stacks up to 3; blooms on expiry (not on refresh)
 - **Swiftmend**: consumes most-recently-applied Rejuv or Regrowth, heals for remaining ticks × healPerTick
 - **Nature's Swiftness**: makes next Nature spell instant; 3-min cooldown
+- **Mouseover healing**: spells resolve their target as `mouseoverTargetId ?? selectedTargetId`; `SET_MOUSEOVER` is dispatched on `onMouseEnter`/`onMouseLeave` of party frames
 
 ## castHistory event types
 
@@ -59,7 +61,7 @@ The root `.layout` div uses `aspect-ratio: 16/9; width: 100%; position: relative
 - `ActionBar` — spell buttons; greys out on GCD, missing mana, or active cooldown
 - `CastBar` — animated progress bar for cast-time spells
 - `CombatLog` — scrolling event log driven by `castHistory`
-- `PartyFrames` — renders one `PartyFrame` per target; shows health bar and active HoTs; dispatches `SELECT_TARGET`
+- `PartyFrames` — renders one `PartyFrame` per target; shows health bar, resource bar (mana/rage/energy, color-coded), and active HoTs; dispatches `SELECT_TARGET` and `SET_MOUSEOVER`
 - `FloatingCombatText` — heal numbers that float up over each party frame
 - `LifebloomTracker` — shows countdown timers for all 3-stack Lifeblooms across targets
 - `HealingMeter` — total healing done, current HPS (10 s sliding window), bar chart breakdown by spell

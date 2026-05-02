@@ -4,12 +4,12 @@
   background: rgba(0, 0, 0, 0.5);
   border-radius: 1cqi;
   color: white;
-  font-size: 1cqi;
 }
 .ControlPanel__row {
   display: flex;
   justify-content: space-between;
   margin: 4cqi 6cqi 4cqi 5cqi;
+  font-size: 8cqi;
 }
 .ControlPanel__label {
   flex: 1;

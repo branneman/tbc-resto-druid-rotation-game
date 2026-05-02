@@ -3,8 +3,21 @@ import './index.css'
 
 const HOT_SPELL_IDS = ['lifebloom', 'rejuvenation', 'regrowth']
 
+const RESOURCE_COLORS = {
+  mana: '#0070dd',
+  energy: '#ffff00',
+  rage: '#c41f3b',
+}
+
 export default function PartyFrames({ state, dispatch }) {
-  const { targets, selectedTargetId, activeEffects, castHistory } = state
+  const {
+    targets,
+    selectedTargetId,
+    activeEffects,
+    castHistory,
+    mana,
+    maxMana,
+  } = state
 
   return (
     <div className='PartyFrames'>
@@ -15,6 +28,8 @@ export default function PartyFrames({ state, dispatch }) {
           isSelected={target.id === selectedTargetId}
           effects={activeEffects.filter((e) => e.targetId === target.id)}
           castHistory={castHistory}
+          resourceCurrent={target.isPlayer ? mana : target.currentResource}
+          resourceMax={target.isPlayer ? maxMana : target.maxResource}
           onClick={() =>
             dispatch({ type: 'SELECT_TARGET', targetId: target.id })
           }
@@ -35,11 +50,17 @@ function PartyFrame({
   isSelected,
   effects,
   castHistory,
+  resourceCurrent,
+  resourceMax,
   onClick,
   onMouseEnter,
   onMouseLeave,
 }) {
-  const healthPct = (target.health / target.maxHealth) * 100
+  const healthPct = Math.round((target.health / target.maxHealth) * 100)
+  const resourcePct = Math.round(
+    Math.min(100, (resourceCurrent / resourceMax) * 100),
+  )
+  const resourceColor = RESOURCE_COLORS[target.resource]
 
   return (
     <div
@@ -62,6 +83,15 @@ function PartyFrame({
             <div
               className='PartyFrame__healthbar-fill'
               style={{ width: `${healthPct}%` }}
+            />
+          </div>
+          <div className='PartyFrame__resourcebar'>
+            <div
+              className='PartyFrame__resourcebar-fill'
+              style={{
+                width: `${resourcePct}%`,
+                backgroundColor: resourceColor,
+              }}
             />
           </div>
           <div className='PartyFrame__hots'>
