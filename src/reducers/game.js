@@ -25,7 +25,7 @@ export const TARGETS = [
   {
     id: 'melee',
     name: 'Poisonous',
-    icon: 'combat',
+    icon: 'catform',
     health: 8000,
     maxHealth: 8000,
     resource: 'energy',
@@ -34,7 +34,7 @@ export const TARGETS = [
   },
   {
     id: 'ranged',
-    name: 'Zeya',
+    name: 'Peepo',
     icon: 'catform',
     health: 6500,
     maxHealth: 6500,
@@ -44,7 +44,7 @@ export const TARGETS = [
   },
   {
     id: 'peepo',
-    name: 'Peepo',
+    name: 'Zeya',
     icon: 'moonkinform',
     health: 8000,
     maxHealth: 8000,
@@ -62,6 +62,7 @@ export const INITIAL_STATE = {
   activeEffects: [], // [{ id, spellId, targetId, appliedAt, duration, tickInterval, ticksFired, stacks }]
   spirit: 335,
   healingpower: 1997,
+  talents: 'full_resto',
   mana: Infinity,
   maxMana: 7000,
   infiniteMana: true,
@@ -107,7 +108,11 @@ export function gameReducer(state, action) {
 //   - Applies the effect immediately (instant spells)
 //   - Sets the cast bar (cast-time spells)
 function handlePlayerCast(state, { spellId, timestamp }) {
-  const spellData = getSpellData(state.spirit, state.healingpower)
+  const spellData = getSpellData(
+    state.spirit,
+    state.healingpower,
+    state.talents,
+  )
   const spell = spellData[spellId]
   if (!spell) return state
 
@@ -238,7 +243,11 @@ function handlePlayerCast(state, { spellId, timestamp }) {
 //   2. Fire pending HoT ticks and remove expired effects
 //   3. Detect cast bar completion and apply the finished cast's effect
 function handleTick(state, { timestamp }) {
-  const spellData = getSpellData(state.spirit, state.healingpower)
+  const spellData = getSpellData(
+    state.spirit,
+    state.healingpower,
+    state.talents,
+  )
   let newEffects = []
   let newHistory = []
   let nextEffectId = state.nextEffectId
@@ -385,7 +394,11 @@ function handleTick(state, { timestamp }) {
 // Private helper for instant casts. Applies spell-specific side effects
 // to state and returns the new state. Each case is self-contained.
 function applySpellEffect(state, spellId, timestamp, targetId) {
-  const spellData = getSpellData(state.spirit, state.healingpower)
+  const spellData = getSpellData(
+    state.spirit,
+    state.healingpower,
+    state.talents,
+  )
   const spell = spellData[spellId]
   let { activeEffects, nextEffectId, castHistory } = state
   const newHistory = []

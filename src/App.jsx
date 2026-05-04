@@ -31,6 +31,7 @@ function App() {
           infiniteMana={state.infiniteMana}
           spirit={state.spirit}
           healingpower={state.healingpower}
+          talents={state.talents}
           dispatch={dispatch}
         />
       </div>

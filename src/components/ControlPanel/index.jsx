@@ -4,6 +4,7 @@ export default function ControlPanel({
   infiniteMana,
   spirit,
   healingpower,
+  talents,
   dispatch,
 }) {
   function handleStatChange(stat, value) {
@@ -23,6 +24,25 @@ export default function ControlPanel({
             checked={infiniteMana}
             onChange={() => dispatch({ type: 'TOGGLE_INFINITE_MANA' })}
           />
+        </div>
+      </div>
+      <div className='ControlPanel__row'>
+        <div className='ControlPanel__label'>Talents</div>
+        <div className='ControlPanel__control'>
+          <select
+            className='ControlPanel__select'
+            value={talents}
+            onChange={(e) =>
+              dispatch({
+                type: 'SET_STAT',
+                stat: 'talents',
+                value: e.target.value,
+              })
+            }
+          >
+            <option value='full_resto'>Full Resto</option>
+            <option value='dreamstate'>Dreamstate</option>
+          </select>
         </div>
       </div>
       <div className='ControlPanel__row'>

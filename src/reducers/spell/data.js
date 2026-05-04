@@ -1,4 +1,9 @@
-import { lifebloom, rejuvenation, regrowth } from './healamount.js'
+import {
+  lifebloom,
+  rejuvenation,
+  regrowth,
+  TALENT_PRESETS,
+} from './healamount.js'
 
 export const SPELL_NAMES = {
   lifebloom: 'Lifebloom',
@@ -8,7 +13,8 @@ export const SPELL_NAMES = {
   natures_swiftness: "Nature's Swiftness",
 }
 
-export function getSpellData(spirit, healingpower) {
+export function getSpellData(spirit, healingpower, talentsKey = 'full_resto') {
+  const talents = TALENT_PRESETS[talentsKey] ?? TALENT_PRESETS.full_resto
   return {
     lifebloom: {
       id: 'lifebloom',
@@ -20,8 +26,12 @@ export function getSpellData(spirit, healingpower) {
       duration: 7000,
       tickInterval: 1000,
       maxStacks: 3,
-      healPerTick: lifebloom.getLifebloomHealPerTick(spirit, healingpower), // per stack
-      bloomHeal: lifebloom.getLifebloomBloomHeal(spirit, healingpower), // per stack
+      healPerTick: lifebloom.getLifebloomHealPerTick(
+        spirit,
+        healingpower,
+        talents,
+      ), // per stack
+      bloomHeal: lifebloom.getLifebloomBloomHeal(spirit, healingpower, talents), // per stack
     },
 
     // Rank 13
@@ -37,6 +47,7 @@ export function getSpellData(spirit, healingpower) {
       healPerTick: rejuvenation.getRejuvenationHealPerTick(
         spirit,
         healingpower,
+        talents,
       ),
     },
 
@@ -50,8 +61,12 @@ export function getSpellData(spirit, healingpower) {
       isHot: true,
       duration: 21000,
       tickInterval: 3000,
-      healPerTick: regrowth.getRegrowthHealPerTick(spirit, healingpower),
-      directHeal: regrowth.getRegrowthDirectHeal(spirit, healingpower),
+      healPerTick: regrowth.getRegrowthHealPerTick(
+        spirit,
+        healingpower,
+        talents,
+      ),
+      directHeal: regrowth.getRegrowthDirectHeal(spirit, healingpower, talents),
     },
 
     swiftmend: {
