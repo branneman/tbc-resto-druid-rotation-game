@@ -51,7 +51,7 @@ The game is a pure Redux-style reducer driven by `requestAnimationFrame`:
 - **Swiftmend**: consumes the Rejuv or Regrowth with the shortest time remaining on the target, heals for totalTicks × healPerTick
 - **Nature's Swiftness**: makes next Nature spell instant; 3-min cooldown
 - **Mouseover healing**: spells resolve their target as `mouseoverTargetId ?? selectedTargetId`; `SET_MOUSEOVER` is dispatched on `onMouseEnter`/`onMouseLeave` of party frames
-- **Mana regeneration**: discrete 2-second tick matching WoW server behaviour. Spirit-based regen formula: `0.009327 × sqrt(intellect) × spirit` per second; suppressed to `intensity%` during the 5-second rule (5SR) window. 5SR starts when mana is spent (cast completion for cast-time spells, immediately for instants; NS costs 0 and does not trigger 5SR). MP5 ticks every 2 s regardless of 5SR. Talent presets in `manaregen.js`: full_resto has 30% Intensity; dreamstate has 30% Intensity + 6% of intellect as additional MP5.
+- **Mana regeneration**: discrete 2-second tick matching WoW behaviour. Spirit-based regen formula: `0.009327 × sqrt(intellect) × spirit` per second; suppressed to `intensity%` during the 5-second rule (5SR) window. 5SR starts when mana is spent (cast completion for cast-time spells, immediately for instants; NS costs 0 and does not trigger 5SR). MP5 ticks every 2s regardless of 5SR. Talent presets in `manaregen.js`: full_resto has 30% Intensity; dreamstate has 30% Intensity + 4% of intellect as additional MP5.
 
 ## castHistory event types
 

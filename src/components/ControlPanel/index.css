@@ -52,3 +52,14 @@
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
+.ControlPanel__talentlink {
+  display: block;
+  padding-top: 1cqi;
+  padding-left: 2cqi;
+  font-size: 5cqi;
+  color: #8ec7ff;
+  text-decoration: none;
+}
+.ControlPanel__talentlink:hover {
+  text-decoration: underline;
+}

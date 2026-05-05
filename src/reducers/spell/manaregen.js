@@ -3,10 +3,10 @@ const TALENT_PRESETS = {
     intensity: 0.3, // 3/3 Intensity: 30% spirit regen while casting
     dreamstate: 0, // no Dreamstate talent
   },
-  // https://www.wowhead.com/tbc/talent-calc/druid/5123220120331302303--500233510114
+  // https://www.wowhead.com/tbc/talent-calc/druid/5003223122031312203--500533100315
   dreamstate: {
     intensity: 0.3, // 3/3 Intensity: 30% spirit regen while casting
-    dreamstate: 0.06, // 3/3 Dreamstate: 6% of Intellect per 5 s
+    dreamstate: 0.04, // 2/3 Dreamstate: 4% of Intellect per 5 s
   },
 }
 
