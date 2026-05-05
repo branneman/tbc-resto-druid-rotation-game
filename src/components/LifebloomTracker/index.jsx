@@ -1,7 +1,11 @@
+import { memo } from 'react'
+import { useGameTime } from '../../hooks/useGameTime.js'
 import './index.css'
 
 // Inspired by: https://wago.io/ts51s5-eA
-export default function LifebloomTracker({ activeEffects, gameTime, targets }) {
+function LifebloomTracker({ activeEffects, targets }) {
+  const gameTime = useGameTime()
+
   const lifeblooms = activeEffects
     .filter((e) => e.spellId === 'lifebloom' && e.stacks === 3)
     .sort((a, b) => a.appliedAt - b.appliedAt)
@@ -37,3 +41,5 @@ export default function LifebloomTracker({ activeEffects, gameTime, targets }) {
     </div>
   )
 }
+
+export default memo(LifebloomTracker)

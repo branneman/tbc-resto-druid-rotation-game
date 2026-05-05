@@ -1,13 +1,11 @@
+import { useState } from 'react'
 import { useKeySequenceDetector } from '../../hooks/dom.js'
 import './index.css'
 
 export default function ActionBar({ state, dispatch }) {
-  const gcdEnabled = state.gameTime >= state.gcdEndsAt
   const props = {
     dispatch,
-    gcdEnabled,
     gcdEndsAt: state.gcdEndsAt,
-    gameTime: state.gameTime,
   }
 
   return (
@@ -62,15 +60,28 @@ function ActionBarButton({
   name,
   shortcut,
   dispatch,
-  gcdEnabled,
   gcdEndsAt,
-  gameTime,
   cooldownEndsAt,
   cooldownDuration,
   unavailable,
 }) {
-  const isOnCooldown = cooldownEndsAt != null && gameTime < cooldownEndsAt
-  const enabled = !unavailable && gcdEnabled && !isOnCooldown
+  const [showGcd, setShowGcd] = useState(false)
+  const [prevGcdEndsAt, setPrevGcdEndsAt] = useState(() => gcdEndsAt)
+  if (gcdEndsAt !== prevGcdEndsAt) {
+    setPrevGcdEndsAt(gcdEndsAt)
+    setShowGcd(true)
+  }
+
+  const [showCooldown, setShowCooldown] = useState(false)
+  const [prevCooldownEndsAt, setPrevCooldownEndsAt] = useState(
+    () => cooldownEndsAt,
+  )
+  if (cooldownEndsAt !== prevCooldownEndsAt) {
+    setPrevCooldownEndsAt(cooldownEndsAt)
+    if (cooldownEndsAt != null) setShowCooldown(true)
+  }
+
+  const enabled = !unavailable && !showGcd && !showCooldown
 
   const onKeyPress = () => {
     if (unavailable) return
@@ -94,14 +105,21 @@ function ActionBarButton({
         ...(unavailable ? { opacity: 0, pointerEvents: 'none' } : {}),
       }}
     >
-      {isOnCooldown ? (
+      {showCooldown ? (
         <div
           key={cooldownEndsAt}
           className='CooldownOverlay'
           style={{ animationDuration: `${cooldownDuration}ms` }}
+          onAnimationEnd={() => setShowCooldown(false)}
         />
       ) : (
-        !gcdEnabled && <div key={gcdEndsAt} className='GCDOverlay' />
+        showGcd && (
+          <div
+            key={gcdEndsAt}
+            className='GCDOverlay'
+            onAnimationEnd={() => setShowGcd(false)}
+          />
+        )
       )}
       <span className='ActionBarButton__shortcut'>{shortcut}</span>
       <span className='ActionBarButton__name'>{name}</span>

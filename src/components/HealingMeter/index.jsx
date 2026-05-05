@@ -1,12 +1,19 @@
-import { memo } from 'react'
+import { memo, useState, useEffect } from 'react'
 import HealingMeterChart from './HealingMeterChart'
 import { formatHealing } from './util'
 import './index.css'
 
 const HEALING_TYPES = new Set(['HOT_TICK', 'HEAL', 'BLOOM'])
 const HPS_WINDOW_MS = 10_000
+const THROTTLE_MS = 250
 
-function HealingMeter({ castHistory = [], gameTime = 0, sessionStartAt = 0 }) {
+function HealingMeter({ castHistory = [], sessionStartAt = 0 }) {
+  const [gameTime, setGameTime] = useState(() => performance.now())
+  useEffect(() => {
+    const id = setInterval(() => setGameTime(performance.now()), THROTTLE_MS)
+    return () => clearInterval(id)
+  }, [])
+
   const healingEvents = castHistory.filter((e) => HEALING_TYPES.has(e.type))
   const totalHealing = healingEvents.reduce((sum, e) => sum + e.amount, 0)
 

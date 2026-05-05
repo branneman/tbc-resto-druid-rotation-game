@@ -57,7 +57,6 @@ export const TARGETS = [
 
 // https://www.wowhead.com/tbc/gear-planner/druid/night-elf/A0YQUAMCAC_1AFM0ADFQJTE1H4FgXsiKdQBd3SBd3UBd3QIAdqmDAFVyikyFQFVztagAXd0gXd0GQFVxAF3dIF3dh2B3T3qKAF3dIF3dQF3diEBrE7WGAF3dIF3diQBx_7WkigBzQrWxiwBshLW1jAB6l7W1DQBywA4AeHkPAHphkAB-w7XDEQByWhIAbO4
 export const INITIAL_STATE = {
-  gameTime: 0, // raw rAF timestamp; updated every TICK
   castBar: null, // { spellId, startedAt, duration, targetId } | null
   gcdEndsAt: 0, // absolute rAF timestamp when GCD expires
   queuedSpell: null, // { spellId, targetId } | null — queued in the last QUEUE_WINDOW ms
@@ -265,9 +264,8 @@ function handlePlayerCast(state, { spellId, timestamp }) {
 // Reducer action: TICK
 //
 // Runs every animation frame. Responsibilities:
-//   1. Advance gameTime
-//   2. Fire pending HoT ticks and remove expired effects
-//   3. Detect cast bar completion and apply the finished cast's effect
+//   1. Fire pending HoT ticks and remove expired effects
+//   2. Detect cast bar completion and apply the finished cast's effect
 function handleTick(state, { timestamp }) {
   const spellData = getSpellData(
     state.spirit,
@@ -278,6 +276,7 @@ function handleTick(state, { timestamp }) {
   let newHistory = []
   let nextEffectId = state.nextEffectId
   let newCastBar = state.castBar
+  let effectsChanged = false
 
   // --- Process active HoTs ---
   //
@@ -293,6 +292,7 @@ function handleTick(state, { timestamp }) {
 
     // Fire any ticks that are due (can be >1 if tab was hidden, etc.)
     if (newTickCount > 0) {
+      effectsChanged = true
       const healPerTick = spell.healPerTick * (effect.stacks ?? 1)
       for (let i = 0; i < newTickCount; i++) {
         newHistory.push({
@@ -308,6 +308,7 @@ function handleTick(state, { timestamp }) {
     }
 
     if (isExpired) {
+      effectsChanged = true
       // Lifebloom blooms on expiry (not on refresh — refresh is handled in PLAYER_CAST)
       if (effect.spellId === 'lifebloom') {
         const bloomAmount = spell.bloomHeal * (effect.stacks ?? 1)
@@ -410,11 +411,23 @@ function handleTick(state, { timestamp }) {
     newLastRegenTickAt = newLastRegenTickAt + 2000
   }
 
+  if (
+    isNotStateChange(state, timestamp, {
+      effectsChanged,
+      newHistory,
+      newMana,
+      newLastRegenTickAt,
+      newFiveSecRuleEndsAt,
+      newCastBar,
+    })
+  ) {
+    return state
+  }
+
   let nextState = {
     ...state,
     sessionStartAt:
       state.sessionStartAt === 0 ? timestamp : state.sessionStartAt,
-    gameTime: timestamp,
     castBar: newCastBar,
     activeEffects: newEffects,
     nextEffectId,
@@ -650,4 +663,50 @@ function applySpellEffect(state, spellId, timestamp, targetId) {
     nextEffectId,
     castHistory: [...castHistory, ...newHistory],
   }
+}
+
+function isNotStateChange(
+  state,
+  timestamp,
+  {
+    effectsChanged,
+    newHistory,
+    newMana,
+    newLastRegenTickAt,
+    newFiveSecRuleEndsAt,
+    newCastBar,
+  },
+) {
+  // First frame should always be considered a state change (initialises sessionStartAt)
+  const sessionStartAt =
+    state.sessionStartAt === 0 ? timestamp : state.sessionStartAt
+  if (sessionStartAt !== state.sessionStartAt) return false
+
+  // Active effects changed: a HoT ticked or expired this frame
+  if (effectsChanged) return false
+
+  // New game events were logged (heals, blooms, out-of-mana, etc.)
+  if (newHistory.length !== 0) return false
+
+  // Mana changed: either a cast completed or the 2-second regen tick fired
+  if (newMana !== state.mana) return false
+
+  // The regen timer advanced (always paired with a mana change, but checked separately for clarity)
+  if (newLastRegenTickAt !== state.lastRegenTickAt) return false
+
+  // The 5-second rule window changed (a cast completed this frame)
+  if (newFiveSecRuleEndsAt !== state.fiveSecRuleEndsAt) return false
+
+  // The cast bar changed state (a cast just completed)
+  if (newCastBar !== state.castBar) return false
+
+  // A queued spell is ready to flush: would produce a new state
+  if (
+    state.queuedSpell &&
+    state.castBar === null &&
+    timestamp >= state.gcdEndsAt
+  )
+    return false
+
+  return true
 }

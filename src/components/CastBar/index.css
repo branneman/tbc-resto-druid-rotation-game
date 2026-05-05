@@ -19,9 +19,18 @@
 }
 .CastBar__bar {
   z-index: 1;
-  width: 20%; /* resize from 0% - 90% */
   height: 100%;
   flex-shrink: 0;
   background: #c16b0a
     linear-gradient(0deg, #c16b0a 0%, #b25b05 50%, #b05d09 100%);
+  animation: castbar-fill linear forwards;
+}
+
+@keyframes castbar-fill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 90%;
+  }
 }

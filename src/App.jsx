@@ -24,8 +24,6 @@ function App() {
     dispatch({ type: 'TICK', timestamp })
   })
 
-  const throttledGameTime = Math.floor(state.gameTime / 250) * 250
-
   return (
     <>
       <div className='layout__controlpanel'>
@@ -44,7 +42,7 @@ function App() {
         <ActionBar state={state} dispatch={dispatch} />
       </div>
       <div className='layout__castbar'>
-        {state.castBar !== null ? <CastBar state={state} /> : ''}
+        {state.castBar !== null ? <CastBar castBar={state.castBar} /> : ''}
       </div>
       <div className='layout__combatlog'>
         <CombatLog castHistory={state.castHistory} targets={state.targets} />
@@ -58,14 +56,12 @@ function App() {
       <div className='layout__lifebloomtracker'>
         <LifebloomTracker
           activeEffects={state.activeEffects}
-          gameTime={state.gameTime}
           targets={state.targets}
         />
       </div>
       <div className='layout__healingmeter'>
         <HealingMeter
           castHistory={state.castHistory}
-          gameTime={throttledGameTime}
           sessionStartAt={state.sessionStartAt}
         />
       </div>
