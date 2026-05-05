@@ -36,20 +36,21 @@ export default function ActionBar({ state, dispatch }) {
       <ActionBarButton
         {...props}
         shortcut='4'
-        whSpellId='18562'
-        spellId='swiftmend'
-        name='Swiftmend'
-        cooldownEndsAt={state.swiftmendCooldownEndsAt}
-        cooldownDuration={15000}
-      />
-      <ActionBarButton
-        {...props}
-        shortcut='5'
         whSpellId='17116'
         spellId='natures_swiftness'
         name={"Nature's Swiftness"}
         cooldownEndsAt={state.nsCooldownEndsAt}
         cooldownDuration={180000}
+      />
+      <ActionBarButton
+        {...props}
+        shortcut='5'
+        whSpellId='18562'
+        spellId='swiftmend'
+        name='Swiftmend'
+        cooldownEndsAt={state.swiftmendCooldownEndsAt}
+        cooldownDuration={15000}
+        unavailable={state.talents === 'dreamstate'}
       />
     </div>
   )
@@ -66,16 +67,15 @@ function ActionBarButton({
   gameTime,
   cooldownEndsAt,
   cooldownDuration,
+  unavailable,
 }) {
   const isOnCooldown = cooldownEndsAt != null && gameTime < cooldownEndsAt
-  const enabled = gcdEnabled && !isOnCooldown
+  const enabled = !unavailable && gcdEnabled && !isOnCooldown
 
-  const onKeyPress = () =>
-    dispatch({
-      type: 'PLAYER_CAST',
-      spellId,
-      timestamp: performance.now(),
-    })
+  const onKeyPress = () => {
+    if (unavailable) return
+    dispatch({ type: 'PLAYER_CAST', spellId, timestamp: performance.now() })
+  }
   useKeySequenceDetector(shortcut, onKeyPress)
 
   return (
@@ -91,6 +91,7 @@ function ActionBarButton({
       {...(enabled ? {} : { disabled: 'disabled' })}
       style={{
         backgroundImage: `url('/tbc-resto-druid-rotation-game/icons/${spellId}.jpg')`,
+        ...(unavailable ? { opacity: 0, pointerEvents: 'none' } : {}),
       }}
     >
       {isOnCooldown ? (

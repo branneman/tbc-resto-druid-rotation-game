@@ -167,6 +167,8 @@ function handlePlayerCast(state, { spellId, timestamp }) {
   if (spellId === 'natures_swiftness' && timestamp < state.nsCooldownEndsAt)
     return state
 
+  if (spellId === 'swiftmend' && state.talents === 'dreamstate') return state
+
   if (spellId === 'swiftmend' && timestamp < state.swiftmendCooldownEndsAt)
     return state
 
