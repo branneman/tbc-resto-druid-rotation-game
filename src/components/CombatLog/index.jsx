@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { memo, useState, useRef, useEffect, useCallback } from 'react'
 import { SPELL_NAMES } from '../../reducers/spell/data.js'
 import './index.css'
 
-export default function CombatLog({ castHistory, targets }) {
+function CombatLog({ castHistory, targets }) {
   const filteredCastHistory = castHistory
     .map((cast) => ({
       ...cast,
@@ -62,6 +62,8 @@ export default function CombatLog({ castHistory, targets }) {
     </div>
   )
 }
+
+export default memo(CombatLog)
 
 function stringifyCast(cast, targets) {
   const targetName =

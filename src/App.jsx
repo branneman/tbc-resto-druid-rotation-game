@@ -24,6 +24,8 @@ function App() {
     dispatch({ type: 'TICK', timestamp })
   })
 
+  const throttledGameTime = Math.floor(state.gameTime / 250) * 250
+
   return (
     <>
       <div className='layout__controlpanel'>
@@ -63,7 +65,7 @@ function App() {
       <div className='layout__healingmeter'>
         <HealingMeter
           castHistory={state.castHistory}
-          gameTime={state.gameTime}
+          gameTime={throttledGameTime}
           sessionStartAt={state.sessionStartAt}
         />
       </div>

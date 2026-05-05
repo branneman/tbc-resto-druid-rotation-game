@@ -1,6 +1,7 @@
+import { memo } from 'react'
 import './index.css'
 
-export default function ControlPanel({
+function ControlPanel({
   infiniteMana,
   spirit,
   healingpower,
@@ -90,3 +91,5 @@ export default function ControlPanel({
     </div>
   )
 }
+
+export default memo(ControlPanel)

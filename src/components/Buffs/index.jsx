@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import './index.css'
 
 // prettier-ignore
@@ -28,7 +29,7 @@ const BUFFS = [
 
 const BASE = '/tbc-resto-druid-rotation-game/icons/'
 
-export default function Buffs() {
+function Buffs() {
   return (
     <div className='Buffs'>
       {BUFFS.map((buff) => (
@@ -42,3 +43,5 @@ export default function Buffs() {
     </div>
   )
 }
+
+export default memo(Buffs)

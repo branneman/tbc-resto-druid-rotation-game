@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import './index.css'
 
-export default function ErrorText({ castHistory }) {
+function ErrorText({ castHistory }) {
   const [dismissed, setDismissed] = useState(() => new Set())
 
   const errors = castHistory
@@ -23,3 +23,5 @@ export default function ErrorText({ castHistory }) {
     </div>
   )
 }
+
+export default memo(ErrorText)
