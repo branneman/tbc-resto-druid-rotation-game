@@ -31,6 +31,8 @@ function App() {
           infiniteMana={state.infiniteMana}
           spirit={state.spirit}
           healingpower={state.healingpower}
+          intellect={state.intellect}
+          mp5={state.mp5}
           talents={state.talents}
           dispatch={dispatch}
         />

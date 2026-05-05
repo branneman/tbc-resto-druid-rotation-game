@@ -12,7 +12,7 @@ A browser-based rotation trainer for TBC Resto Druid healing. The player practic
 The game is a pure Redux-style reducer driven by `requestAnimationFrame`:
 
 - `src/reducers/game.js` — all game logic; actions: `PLAYER_CAST`, `TICK`, `SELECT_TARGET`, `SET_MOUSEOVER`, `TOGGLE_INFINITE_MANA`, `SET_STAT`
-- `src/reducers/spell/data.js` — spell definitions; exports `getSpellData(spirit, healingpower)` (full data with computed heal amounts) and `SPELL_NAMES` (static display names)
+- `src/reducers/spell/data.js` — spell definitions; exports `getSpellData(spirit, healingpower, talentsKey)` (full data with computed heal amounts) and `SPELL_NAMES` (static display names)
 - `src/App.jsx` — wires up `useReducer` + `useAnimationFrame`, passes state down as props
 - Components receive `state` + `dispatch` as props; no context, no global store
 
@@ -25,8 +25,12 @@ The game is a pure Redux-style reducer driven by `requestAnimationFrame`:
   gcdEndsAt,
   queuedSpell,               // { spellId, targetId } | null — queued in the last 400ms before GCD/cast ends
   activeEffects,             // [{ id, spellId, targetId, appliedAt, duration, tickInterval, ticksFired, stacks }]
-  spirit, healingpower,        // player stats; affect all heal amount calculations
+  spirit, healingpower,      // player stats; affect all heal amount calculations
+  intellect, mp5,            // player stats; affect mana regeneration
+  talents,                   // 'full_resto' | 'dreamstate'; affects heal amounts and mana regen
   mana, maxMana, infiniteMana,
+  fiveSecRuleEndsAt,         // rAF timestamp when the 5-second rule window expires
+  lastRegenTickAt,           // rAF timestamp of the last 2-second mana regen tick
   nsActive,                  // Nature's Swiftness buff is up; next spell is instant
   nsCooldownEndsAt,
   swiftmendCooldownEndsAt,
@@ -44,9 +48,10 @@ The game is a pure Redux-style reducer driven by `requestAnimationFrame`:
 - **GCD**: 1500ms, triggered by most spells; NS is off-GCD
 - **HoT ticks**: derived each frame from `(timestamp - appliedAt) / tickInterval`, not scheduled
 - **Lifebloom**: stacks up to 3; blooms on expiry (not on refresh)
-- **Swiftmend**: consumes most-recently-applied Rejuv or Regrowth, heals for remaining ticks × healPerTick
+- **Swiftmend**: consumes the Rejuv or Regrowth with the shortest time remaining on the target, heals for totalTicks × healPerTick
 - **Nature's Swiftness**: makes next Nature spell instant; 3-min cooldown
 - **Mouseover healing**: spells resolve their target as `mouseoverTargetId ?? selectedTargetId`; `SET_MOUSEOVER` is dispatched on `onMouseEnter`/`onMouseLeave` of party frames
+- **Mana regeneration**: discrete 2-second tick matching WoW server behaviour. Spirit-based regen formula: `0.009327 × sqrt(intellect) × spirit` per second; suppressed to `intensity%` during the 5-second rule (5SR) window. 5SR starts when mana is spent (cast completion for cast-time spells, immediately for instants; NS costs 0 and does not trigger 5SR). MP5 ticks every 2 s regardless of 5SR. Talent presets in `manaregen.js`: full_resto has 30% Intensity; dreamstate has 30% Intensity + 6% of intellect as additional MP5.
 
 ## castHistory event types
 
@@ -65,12 +70,13 @@ The root `.layout` div uses `aspect-ratio: 16/9; width: 100%; position: relative
 - `FloatingCombatText` — heal numbers that float up over each party frame
 - `LifebloomTracker` — shows countdown timers for all 3-stack Lifeblooms across targets
 - `HealingMeter` — total healing done, current HPS (10 s sliding window), bar chart breakdown by spell
-- `ControlPanel` — infinite mana toggle, spirit and healing power inputs; dispatches `SET_STAT`
+- `ControlPanel` — infinite mana toggle, talent spec selector, spirit/healing power/intellect/MP5 inputs; dispatches `SET_STAT` and `TOGGLE_INFINITE_MANA`
 - `ErrorText` — displays reducer error messages
 - `Explainer` — full-screen overlay shown on every page load; explains the app and the 4GCD cycle with a rotation chart; dismissed via Start button or Escape key
 
 ## Other source files
 
-- `src/reducers/spell/healamount.js` — pure heal-amount calculations (lifebloom tick/bloom, rejuv, regrowth)
+- `src/reducers/spell/healamount.js` — pure heal-amount calculations (lifebloom tick/bloom, rejuv, regrowth); exports `TALENT_PRESETS` used by `data.js`
+- `src/reducers/spell/manaregen.js` — pure mana regen calculation; exports `getManaRegenPerMs(spirit, intellect, mp5, talents, inFiveSR)`
 - `src/hooks/useAnimationFrame.js` — drives the `TICK` loop
 - `src/hooks/dom.js` — `useKeySequenceDetector` and other DOM hooks

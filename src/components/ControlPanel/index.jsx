@@ -4,6 +4,8 @@ export default function ControlPanel({
   infiniteMana,
   spirit,
   healingpower,
+  intellect,
+  mp5,
   talents,
   dispatch,
 }) {
@@ -46,6 +48,16 @@ export default function ControlPanel({
         </div>
       </div>
       <div className='ControlPanel__row'>
+        <div className='ControlPanel__label'>Intellect</div>
+        <div className='ControlPanel__control'>
+          <input
+            className='ControlPanel__statinput'
+            value={intellect}
+            onChange={(e) => handleStatChange('intellect', e.target.value)}
+          />
+        </div>
+      </div>
+      <div className='ControlPanel__row'>
         <div className='ControlPanel__label'>Spirit</div>
         <div className='ControlPanel__control'>
           <input
@@ -62,6 +74,16 @@ export default function ControlPanel({
             className='ControlPanel__statinput'
             value={healingpower}
             onChange={(e) => handleStatChange('healingpower', e.target.value)}
+          />
+        </div>
+      </div>
+      <div className='ControlPanel__row'>
+        <div className='ControlPanel__label'>MP5</div>
+        <div className='ControlPanel__control'>
+          <input
+            className='ControlPanel__statinput'
+            value={mp5}
+            onChange={(e) => handleStatChange('mp5', e.target.value)}
           />
         </div>
       </div>

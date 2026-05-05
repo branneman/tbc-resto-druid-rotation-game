@@ -1,4 +1,5 @@
 import { getSpellData } from './spell/data.js'
+import { getManaRegenPerMs } from './spell/manaregen.js'
 
 const QUEUE_WINDOW = 400 // ms; accept spell inputs this early before cast/GCD ends
 
@@ -54,6 +55,7 @@ export const TARGETS = [
   },
 ]
 
+// https://www.wowhead.com/tbc/gear-planner/druid/night-elf/A0YQUAMCAC_1AFM0ADFQJTE1H4FgXsiKdQBd3SBd3UBd3QIAdqmDAFVyikyFQFVztagAXd0gXd0GQFVxAF3dIF3dh2B3T3qKAF3dIF3dQF3diEBrE7WGAF3dIF3diQBx_7WkigBzQrWxiwBshLW1jAB6l7W1DQBywA4AeHkPAHphkAB-w7XDEQByWhIAbO4
 export const INITIAL_STATE = {
   gameTime: 0, // raw rAF timestamp; updated every TICK
   castBar: null, // { spellId, startedAt, duration, targetId } | null
@@ -62,10 +64,14 @@ export const INITIAL_STATE = {
   activeEffects: [], // [{ id, spellId, targetId, appliedAt, duration, tickInterval, ticksFired, stacks }]
   spirit: 335,
   healingpower: 1997,
+  intellect: 322,
+  mp5: 113,
   talents: 'full_resto',
   mana: Infinity,
   maxMana: 7000,
   infiniteMana: true,
+  fiveSecRuleEndsAt: 0,
+  lastRegenTickAt: 0,
   nsActive: false, // Nature's Swiftness buff is up; next spell is instant
   nsCooldownEndsAt: 0,
   swiftmendCooldownEndsAt: 0,
@@ -93,6 +99,10 @@ export function gameReducer(state, action) {
         ...state,
         infiniteMana,
         mana: infiniteMana ? Infinity : state.maxMana,
+        // Reset the regen timer so the first tick fires 2 s from now, not
+        // from whenever the page loaded (lastRegenTickAt otherwise stays frozen
+        // at the first-frame timestamp while infinite mana is active).
+        lastRegenTickAt: infiniteMana ? state.lastRegenTickAt : 0,
       }
     }
     case 'SET_STAT':
@@ -195,9 +205,12 @@ function handlePlayerCast(state, { spellId, timestamp }) {
     instant: effectiveCastTime === 0,
   }
 
+  // In WoW, mana is deducted when a cast *completes*, not when it starts.
+  // Cancelling a cast costs nothing. For instant spells start === complete, so
+  // we apply mana and 5SR immediately. For cast-time spells both are deferred
+  // to handleTick when the cast bar expires.
   const baseState = {
     ...state,
-    mana: state.mana - spell.manaCost,
     queuedSpell: null,
     // NS: activating it sets the flag; casting anything else clears it
     nsActive:
@@ -221,10 +234,21 @@ function handlePlayerCast(state, { spellId, timestamp }) {
 
   // --- Instant cast: apply effect right now ---
   if (effectiveCastTime === 0) {
-    return applySpellEffect(baseState, spellId, timestamp, targetId)
+    return applySpellEffect(
+      {
+        ...baseState,
+        mana: state.mana - spell.manaCost,
+        fiveSecRuleEndsAt:
+          spell.manaCost > 0 ? timestamp + 5000 : state.fiveSecRuleEndsAt,
+      },
+      spellId,
+      timestamp,
+      targetId,
+    )
   }
 
   // --- Cast-time spell: open the cast bar ---
+  // Mana and 5SR are deferred to cast completion in handleTick.
   return {
     ...baseState,
     castBar: {
@@ -311,14 +335,18 @@ function handleTick(state, { timestamp }) {
   }
 
   // --- Check cast bar completion ---
+  let castCompletionManaCost = 0
+  let newFiveSecRuleEndsAt = state.fiveSecRuleEndsAt
   if (state.castBar !== null) {
     const { spellId, startedAt, duration, targetId } = state.castBar
 
     if (timestamp >= startedAt + duration) {
       newCastBar = null
       newHistory.push({ timestamp, type: 'CAST_COMPLETE', spellId, targetId })
-
+      // Mana is deducted and 5SR triggered at cast completion (WoW behaviour).
       const spell = spellData[spellId]
+      castCompletionManaCost = spell.manaCost
+      if (spell.manaCost > 0) newFiveSecRuleEndsAt = timestamp + 5000
 
       // Direct heal lands on cast completion (e.g. Regrowth initial)
       if (spell.directHeal) {
@@ -359,6 +387,27 @@ function handleTick(state, { timestamp }) {
     }
   }
 
+  // --- Mana regeneration (discrete 2-second tick) ---
+  // lastRegenTickAt starts at 0; initialise it to the first frame's timestamp so
+  // the first tick fires 2 s into the session rather than immediately.
+  // Apply cast completion cost first, then add any regen that fires this frame.
+  let newMana = state.mana - castCompletionManaCost
+  let newLastRegenTickAt =
+    state.lastRegenTickAt === 0 ? timestamp : state.lastRegenTickAt
+  if (!state.infiniteMana && timestamp >= newLastRegenTickAt + 2000) {
+    const inFiveSR = timestamp < newFiveSecRuleEndsAt
+    const regenPerTick =
+      getManaRegenPerMs(
+        state.spirit,
+        state.intellect,
+        state.mp5,
+        state.talents,
+        inFiveSR,
+      ) * 2000
+    newMana = Math.min(state.maxMana, newMana + regenPerTick)
+    newLastRegenTickAt = newLastRegenTickAt + 2000
+  }
+
   let nextState = {
     ...state,
     sessionStartAt:
@@ -367,6 +416,9 @@ function handleTick(state, { timestamp }) {
     castBar: newCastBar,
     activeEffects: newEffects,
     nextEffectId,
+    mana: newMana,
+    fiveSecRuleEndsAt: newFiveSecRuleEndsAt,
+    lastRegenTickAt: newLastRegenTickAt,
     castHistory:
       newHistory.length > 0
         ? [...state.castHistory, ...newHistory]
