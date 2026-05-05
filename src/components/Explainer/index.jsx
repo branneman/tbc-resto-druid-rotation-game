@@ -122,7 +122,9 @@ export default function Explainer({ onClose }) {
               <img src={`${ICON_PATH}rejuvenation.jpg`} />
               Rejuvenation, <img src={`${ICON_PATH}swiftmend.jpg`} />
               Swiftmend, <img src={`${ICON_PATH}natures_swiftness.jpg`} />
-              Nature's Swiftness + Regrowth, etc.)
+              Nature's Swiftness + <img src={`${ICON_PATH}regrowth.jpg`} />
+              Regrowth, <img src={`${ICON_PATH}spell_nature_faeriefire.jpg`} />
+              Faerie Fire, etc.)
             </span>{' '}
             each take 1.5s. Regrowth takes 2s. How many Lifeblooms you maintain
             determines how many GCDs remain for other healing. The ⚠️ patterns
