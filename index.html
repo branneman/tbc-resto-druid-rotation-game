@@ -34,12 +34,144 @@
       rel="stylesheet"
     />
 
-    <title>Tbc Resto Druid Rotation Game</title>
+    <title>TBC Resto Druid Rotation Trainer</title>
+    <meta
+      name="description"
+      content="Browser-based rotation trainer for Restoration Druids in World of Warcraft: The Burning Crusade. Practice the Lifebloom 4GCD cycle and build healer muscle memory before your raid depends on it."
+    />
+
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://branneman.github.io/tbc-resto-druid-rotation-game/"
+    />
+    <meta property="og:title" content="TBC Resto Druid Rotation Trainer" />
+    <meta
+      property="og:description"
+      content="Browser-based rotation trainer for Restoration Druids in World of Warcraft: The Burning Crusade. Practice the Lifebloom 4GCD cycle and build healer muscle memory before your raid depends on it."
+    />
+    <meta
+      property="og:image"
+      content="https://branneman.github.io/tbc-resto-druid-rotation-game/preview.png"
+    />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="TBC Resto Druid Rotation Trainer" />
+    <meta
+      name="twitter:description"
+      content="Browser-based rotation trainer for Restoration Druids in World of Warcraft: The Burning Crusade. Practice the Lifebloom 4GCD cycle and build healer muscle memory before your raid depends on it."
+    />
+    <meta
+      name="twitter:image"
+      content="https://branneman.github.io/tbc-resto-druid-rotation-game/preview.png"
+    />
     <script type="module" crossorigin src="/tbc-resto-druid-rotation-game/assets/index-D7Cb3ss_.js"></script>
     <link rel="stylesheet" crossorigin href="/tbc-resto-druid-rotation-game/assets/index-CuRQU6xL.css">
   </head>
   <body>
-    <div id="root" class="layout"></div>
+    <div id="root" class="layout">
+      <main
+        style="
+          font-family: Georgia, serif;
+          max-width: 800px;
+          margin: 40px auto;
+          padding: 0 20px;
+          color: #ccc;
+          background: #1a1a1a;
+          line-height: 1.6;
+        "
+      >
+        <h1 style="color: #f0c040">TBC Resto Druid Rotation Trainer</h1>
+        <p>
+          A browser-based trainer for Restoration Druid healers in World of
+          Warcraft: The Burning Crusade. As a Resto Druid, your healing output
+          depends not just on gear — it depends on how precisely you sequence
+          your spells, in real time, under raid pressure.
+        </p>
+        <p>
+          The core challenge: keep a 3-stack Lifebloom active on one or more
+          tanks at all times, while filling every remaining GCD with other
+          heals. This tool lets you build that muscle memory in a low-stakes
+          environment, so your fingers know the rotation before the raid depends
+          on it.
+        </p>
+        <h2 style="color: #f0c040">Optimal Rotation: the 4GCD Cycle</h2>
+        <p>
+          The cornerstone of TBC Resto Druid play is the
+          <strong>4GCD Cycle</strong>: a repeating sequence of 4 spells that
+          fits within Lifebloom's 7-second window. Before Lifebloom expires you
+          must refresh it to keep the 3-stack; everything else slots around that
+          constraint.
+        </p>
+        <p>
+          Instant-cast spells (Rejuvenation, Swiftmend, Nature's Swiftness +
+          Regrowth) each take 1.5s. Regrowth takes 2s. How many Lifeblooms you
+          maintain determines how many GCDs remain for other healing.
+        </p>
+        <table style="border-collapse: collapse; width: 100%">
+          <thead>
+            <tr style="color: #f0c040">
+              <th style="padding: 4px 8px; text-align: left"># LB3</th>
+              <th style="padding: 4px 8px; text-align: left">GCD 1</th>
+              <th style="padding: 4px 8px; text-align: left">GCD 2</th>
+              <th style="padding: 4px 8px; text-align: left">GCD 3</th>
+              <th style="padding: 4px 8px; text-align: left">GCD 4</th>
+              <th style="padding: 4px 8px; text-align: left">Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding: 4px 8px">1</td>
+              <td style="padding: 4px 8px">Lifebloom</td>
+              <td style="padding: 4px 8px">Instant</td>
+              <td style="padding: 4px 8px">Instant</td>
+              <td style="padding: 4px 8px">Instant</td>
+              <td style="padding: 4px 8px">6s</td>
+            </tr>
+            <tr>
+              <td style="padding: 4px 8px">1</td>
+              <td style="padding: 4px 8px">Lifebloom</td>
+              <td style="padding: 4px 8px">Regrowth</td>
+              <td style="padding: 4px 8px">Instant</td>
+              <td style="padding: 4px 8px">Instant</td>
+              <td style="padding: 4px 8px">6.5s</td>
+            </tr>
+            <tr>
+              <td style="padding: 4px 8px">2</td>
+              <td style="padding: 4px 8px">Lifebloom</td>
+              <td style="padding: 4px 8px">Lifebloom</td>
+              <td style="padding: 4px 8px">Instant</td>
+              <td style="padding: 4px 8px">Instant</td>
+              <td style="padding: 4px 8px">6s</td>
+            </tr>
+            <tr>
+              <td style="padding: 4px 8px">2</td>
+              <td style="padding: 4px 8px">Lifebloom</td>
+              <td style="padding: 4px 8px">Lifebloom</td>
+              <td style="padding: 4px 8px">Regrowth</td>
+              <td style="padding: 4px 8px">Instant</td>
+              <td style="padding: 4px 8px">6.5s</td>
+            </tr>
+            <tr>
+              <td style="padding: 4px 8px">3</td>
+              <td style="padding: 4px 8px">Lifebloom</td>
+              <td style="padding: 4px 8px">Lifebloom</td>
+              <td style="padding: 4px 8px">Lifebloom</td>
+              <td style="padding: 4px 8px">Instant</td>
+              <td style="padding: 4px 8px">6s</td>
+            </tr>
+            <tr>
+              <td style="padding: 4px 8px">3</td>
+              <td style="padding: 4px 8px">Lifebloom</td>
+              <td style="padding: 4px 8px">Lifebloom</td>
+              <td style="padding: 4px 8px">Lifebloom</td>
+              <td style="padding: 4px 8px">Regrowth</td>
+              <td style="padding: 4px 8px">6.5s</td>
+            </tr>
+          </tbody>
+        </table>
+      </main>
+    </div>
     <script src="https://wow.zamimg.com/js/tooltips.js"></script>
   </body>
 </html>
