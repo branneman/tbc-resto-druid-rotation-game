@@ -5,11 +5,65 @@
   background: rgba(0, 0, 0, 0.8);
   color: white;
   container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+}
+.CombatLog__tabs {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0 1%;
+  gap: 1%;
+}
+.CombatLog__tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: Arial, sans-serif;
+  font-size: 2.8cqi;
+  padding: 1cqi 1.5cqi;
+  cursor: pointer;
+  line-height: 1;
+  margin-bottom: -1px;
+  transition: color 0.15s;
+}
+.CombatLog__tab--active {
+  color: rgba(255, 255, 255, 0.9);
+  border-bottom-color: rgba(255, 255, 255, 0.6);
+}
+.CombatLog__tab:not(.CombatLog__tab--active):hover {
+  color: rgba(255, 255, 255, 0.65);
+}
+.CombatLog__copyBtn {
+  margin-left: auto;
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 2.5cqi;
+  width: 1.8em;
+  height: 1.8em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s, border-color 0.15s;
+}
+.CombatLog__copyBtn:hover {
+  color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+.CombatLog__copyBtn--copied {
+  color: rgba(100, 220, 100, 0.9);
+  border-color: rgba(100, 220, 100, 0.6);
 }
 .CombatLog__scroll {
-  position: absolute;
-  inset: 0;
+  flex: 1;
   overflow-y: scroll;
+  min-height: 0;
 }
 .CombatLog__list {
   margin: 2%;
@@ -18,6 +72,14 @@
 .CombatLog__listitem {
   list-style: none;
   font-size: 3cqi;
+}
+.CombatLog__jsonl {
+  margin: 2%;
+  font-size: 2.5cqi;
+  font-family: monospace;
+  white-space: pre-wrap;
+  word-break: break-all;
+  color: rgba(255, 255, 255, 0.85);
 }
 .CombatLog__scrollBtn {
   position: absolute;

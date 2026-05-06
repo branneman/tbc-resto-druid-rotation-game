@@ -5,7 +5,7 @@ const QUEUE_WINDOW = 400 // ms; accept spell inputs this early before cast/GCD e
 
 export const TARGETS = [
   {
-    id: 'player',
+    id: 'dasz',
     name: 'Dassz',
     icon: 'treeform',
     health: 6000,
@@ -14,7 +14,7 @@ export const TARGETS = [
     resource: 'mana',
   },
   {
-    id: 'tank',
+    id: 'nezz',
     name: 'Nezz',
     icon: 'bearform',
     health: 12000,
@@ -24,7 +24,7 @@ export const TARGETS = [
     maxResource: 100,
   },
   {
-    id: 'melee',
+    id: 'poisonous',
     name: 'Poisonous',
     icon: 'catform',
     health: 8000,
@@ -34,7 +34,7 @@ export const TARGETS = [
     maxResource: 100,
   },
   {
-    id: 'ranged',
+    id: 'peepo',
     name: 'Peepo',
     icon: 'catform',
     health: 6500,
@@ -44,7 +44,7 @@ export const TARGETS = [
     maxResource: 6000,
   },
   {
-    id: 'peepo',
+    id: 'zeya',
     name: 'Zeya',
     icon: 'moonkinform',
     health: 8000,
