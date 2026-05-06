@@ -12,6 +12,7 @@ function CastBar({ castBar }) {
           }}
         ></div>
         <div
+          key={castBar.startedAt}
           className='CastBar__bar'
           style={{ animationDuration: `${castBar.duration}ms` }}
         ></div>
