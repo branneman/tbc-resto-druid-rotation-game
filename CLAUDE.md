@@ -1,6 +1,6 @@
 # TBC Resto Druid Rotation Game
 
-A browser-based rotation trainer for TBC Resto Druid healing. The player practices spell sequencing against a real-time game loop. The goal is a fairly realistic simulator, minus haste. The UI design mimics the WoW TBC ingame interface, the actionbar, castbar and combatlog look the same.
+A browser-based rotation trainer for TBC Resto Druid healing. The player practices spell sequencing against a real-time game loop. The goal is a fairly realistic simulator including haste. The UI design mimics the WoW TBC ingame interface, the actionbar, castbar and combatlog look the same.
 
 ## Stack
 
@@ -12,7 +12,7 @@ A browser-based rotation trainer for TBC Resto Druid healing. The player practic
 The game is a pure Redux-style reducer driven by `requestAnimationFrame`:
 
 - `src/reducers/game.js` — all game logic; actions: `PLAYER_CAST`, `TICK`, `SELECT_TARGET`, `SET_MOUSEOVER`, `TOGGLE_INFINITE_MANA`, `SET_STAT`
-- `src/reducers/spell/data.js` — spell definitions; exports `getSpellData(spirit, healingpower, talentsKey)` (full data with computed heal amounts) and `SPELL_NAMES` (static display names)
+- `src/reducers/spell/data.js` — spell definitions; exports `getSpellData(spirit, healingpower, talentsKey, haste)` (full data with computed heal amounts) and `SPELL_NAMES` (static display names)
 - `src/App.jsx` — wires up `useReducer` + `useAnimationFrame`, passes state down as props
 - Components receive `state` + `dispatch` as props; no context, no global store
 
@@ -28,6 +28,7 @@ The game is a pure Redux-style reducer driven by `requestAnimationFrame`:
   spirit, healingpower,      // player stats; affect all heal amount calculations
   intellect, mp5,            // player stats; affect mana regeneration
   talents,                   // 'full_resto' | 'dreamstate'; affects heal amounts and mana regen
+  haste,                     // haste rating (e.g. 0 / 118 / 247); scales GCD and Regrowth cast time
   mana, maxMana, infiniteMana,
   fiveSecRuleEndsAt,         // rAF timestamp when the 5-second rule window expires
   lastRegenTickAt,           // rAF timestamp of the last 2-second mana regen tick
@@ -45,7 +46,7 @@ The game is a pure Redux-style reducer driven by `requestAnimationFrame`:
 
 ## Key mechanics
 
-- **GCD**: 1500ms, triggered by most spells; NS is off-GCD
+- **GCD**: 1500ms base, hasted via `1 + haste / 15.77`, floored at 1000ms; triggered by most spells; NS is off-GCD. Regrowth cast time is also hasted by the same formula.
 - **HoT ticks**: derived each frame from `(timestamp - appliedAt) / tickInterval`, not scheduled
 - **Lifebloom**: stacks up to 3; blooms on expiry (not on refresh)
 - **Swiftmend**: consumes the Rejuv or Regrowth with the shortest time remaining on the target, heals for totalTicks × healPerTick
@@ -70,9 +71,9 @@ The root `.layout` div uses `aspect-ratio: 16/9; width: 100%; position: relative
 - `FloatingCombatText` — heal numbers that float up over each party frame
 - `LifebloomTracker` — shows countdown timers for all 3-stack Lifeblooms across targets
 - `HealingMeter` — total healing done, current HPS (10 s sliding window), bar chart breakdown by spell
-- `ControlPanel` — infinite mana toggle, talent spec selector, spirit/healing power/intellect/MP5 inputs; dispatches `SET_STAT` and `TOGGLE_INFINITE_MANA`
+- `ControlPanel` — infinite mana toggle, talent spec selector, haste rating selector (0 / 118 / 247), spirit/healing power/intellect/MP5 inputs; dispatches `SET_STAT` and `TOGGLE_INFINITE_MANA`
 - `ErrorText` — displays reducer error messages
-- `Explainer` — full-screen overlay shown on every page load; explains the app and the 4GCD cycle with a rotation chart; dismissed via Start button or Escape key
+- `Explainer` — full-screen overlay shown on every page load; tabbed layout with a rotation overview tab and a 5GCD Cycle tab documenting haste breakpoints; dismissed via Start button or Escape key
 
 ## Other source files
 
