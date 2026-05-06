@@ -58,7 +58,7 @@ a.ActionBarButton {
 }
 .GCDOverlay {
   z-index: 3;
-  animation: conic-effect 1.5s linear 1;
+  animation: conic-effect linear 1;
 }
 @keyframes conic-effect {
   0% {

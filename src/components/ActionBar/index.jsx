@@ -3,9 +3,14 @@ import { useKeySequenceDetector } from '../../hooks/dom.js'
 import './index.css'
 
 export default function ActionBar({ state, dispatch }) {
+  const gcdDuration = Math.max(
+    1000,
+    Math.round(1500 / (1 + (state.haste || 0) / 15.77)),
+  )
   const props = {
     dispatch,
     gcdEndsAt: state.gcdEndsAt,
+    gcdDuration,
   }
 
   return (
@@ -61,6 +66,7 @@ function ActionBarButton({
   shortcut,
   dispatch,
   gcdEndsAt,
+  gcdDuration,
   cooldownEndsAt,
   cooldownDuration,
   unavailable,
@@ -117,6 +123,7 @@ function ActionBarButton({
           <div
             key={gcdEndsAt}
             className='GCDOverlay'
+            style={{ animationDuration: `${gcdDuration}ms` }}
             onAnimationEnd={() => setShowGcd(false)}
           />
         )

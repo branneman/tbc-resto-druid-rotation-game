@@ -66,6 +66,7 @@ export const INITIAL_STATE = {
   intellect: 322,
   mp5: 113,
   talents: 'full_resto',
+  haste: 0,
   mana: Infinity,
   maxMana: 7000,
   infiniteMana: true,
@@ -78,7 +79,7 @@ export const INITIAL_STATE = {
   castHistory: [], // append-only event log; every game event is pushed here
   nextEffectId: 1, // auto-increment for stable effect identity
   targets: TARGETS,
-  selectedTargetId: 'tank',
+  selectedTargetId: 'nezz',
   mouseoverTargetId: null,
 }
 
@@ -121,6 +122,7 @@ function handlePlayerCast(state, { spellId, timestamp }) {
     state.spirit,
     state.healingpower,
     state.talents,
+    state.haste,
   )
   const spell = spellData[spellId]
   if (!spell) return state
@@ -203,6 +205,7 @@ function handlePlayerCast(state, { spellId, timestamp }) {
     type: 'CAST_START',
     spellId,
     targetId,
+    castTime: effectiveCastTime,
     instant: effectiveCastTime === 0,
   }
 
@@ -271,6 +274,7 @@ function handleTick(state, { timestamp }) {
     state.spirit,
     state.healingpower,
     state.talents,
+    state.haste,
   )
   let newEffects = []
   let newHistory = []
@@ -465,6 +469,7 @@ function applySpellEffect(state, spellId, timestamp, targetId) {
     state.spirit,
     state.healingpower,
     state.talents,
+    state.haste,
   )
   const spell = spellData[spellId]
   let { activeEffects, nextEffectId, castHistory } = state

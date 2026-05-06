@@ -8,6 +8,7 @@ function ControlPanel({
   intellect,
   mp5,
   talents,
+  haste,
   dispatch,
 }) {
   function handleStatChange(stat, value) {
@@ -108,6 +109,23 @@ function ControlPanel({
             onChange={(e) => handleStatChange('mp5', e.target.value)}
             onKeyDown={handleStatKeyDown}
           />
+        </div>
+      </div>
+      <div className='ControlPanel__row'>
+        <div className='ControlPanel__label'>Haste rating</div>
+        <div className='ControlPanel__control'>
+          <select
+            className='ControlPanel__select'
+            value={haste}
+            onChange={(e) => {
+              handleStatChange('haste', e.target.value)
+              e.target.blur()
+            }}
+          >
+            <option value={0}>0</option>
+            <option value={118}>118</option>
+            <option value={247}>247</option>
+          </select>
         </div>
       </div>
     </div>

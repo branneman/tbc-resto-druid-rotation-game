@@ -13,14 +13,23 @@ export const SPELL_NAMES = {
   natures_swiftness: "Nature's Swiftness",
 }
 
-export function getSpellData(spirit, healingpower, talentsKey = 'full_resto') {
+export function getSpellData(
+  spirit,
+  healingpower,
+  talentsKey = 'full_resto',
+  haste = 0,
+) {
   const talents = TALENT_PRESETS[talentsKey] ?? TALENT_PRESETS.full_resto
+
+  const hasteMultiplier = 1 + haste / 15.77
+  const hastedGcd = Math.max(1000, Math.round(1500 / hasteMultiplier))
+
   return {
     lifebloom: {
       id: 'lifebloom',
       name: SPELL_NAMES.lifebloom,
       castTime: 0,
-      gcd: 1500,
+      gcd: hastedGcd,
       manaCost: 220,
       isHot: true,
       duration: 7000,
@@ -39,7 +48,7 @@ export function getSpellData(spirit, healingpower, talentsKey = 'full_resto') {
       id: 'rejuvenation',
       name: SPELL_NAMES.rejuvenation,
       castTime: 0,
-      gcd: 1500,
+      gcd: hastedGcd,
       manaCost: 415,
       isHot: true,
       duration: 12000,
@@ -55,8 +64,8 @@ export function getSpellData(spirit, healingpower, talentsKey = 'full_resto') {
     regrowth: {
       id: 'regrowth',
       name: SPELL_NAMES.regrowth,
-      castTime: 2000,
-      gcd: 1500,
+      castTime: Math.round(2000 / hasteMultiplier),
+      gcd: hastedGcd,
       manaCost: 675,
       isHot: true,
       duration: 21000,
@@ -73,7 +82,7 @@ export function getSpellData(spirit, healingpower, talentsKey = 'full_resto') {
       id: 'swiftmend',
       name: SPELL_NAMES.swiftmend,
       castTime: 0,
-      gcd: 1500,
+      gcd: hastedGcd,
       manaCost: 335,
       // Consumes the shortest-time-left Rejuv or Regrowth.
       // Heals for totalPossibleTicks × healPerTick of the consumed HoT.

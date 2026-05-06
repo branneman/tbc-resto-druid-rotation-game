@@ -62,6 +62,39 @@
   letter-spacing: 0.05em;
 }
 
+.Explainer__tabs {
+  display: flex;
+  gap: 0.4cqi;
+  margin-bottom: 2cqi;
+  border-bottom: 1px solid rgba(200, 168, 90, 0.3);
+  padding-bottom: 0;
+}
+
+.Explainer__tab {
+  font-family: 'Cinzel', serif;
+  font-size: 1.8cqi;
+  color: #8a7a55;
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: 3px 3px 0 0;
+  padding: 0.4cqi 1.2cqi;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  margin-bottom: -1px;
+  transition: color 0.1s;
+}
+
+.Explainer__tab:hover {
+  color: #c8a85a;
+}
+
+.Explainer__tab--active {
+  color: #ffd700;
+  border-color: rgba(200, 168, 90, 0.3);
+  background: rgba(10, 8, 5, 0.97);
+}
+
 .Explainer__section {
   margin-bottom: 2.5cqi;
 }

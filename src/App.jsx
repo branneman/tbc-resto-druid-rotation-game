@@ -34,6 +34,7 @@ function App() {
           intellect={state.intellect}
           mp5={state.mp5}
           talents={state.talents}
+          haste={state.haste}
           dispatch={dispatch}
         />
       </div>
@@ -65,9 +66,6 @@ function App() {
           sessionStartAt={state.sessionStartAt}
         />
       </div>
-      {/* <div style={{ position: 'absolute', overflow: 'scroll' }}>
-        <pre>{JSON.stringify(state.castHistory, null, 2)}</pre>
-      </div> */}
       {showExplainer && <Explainer onClose={() => setShowExplainer(false)} />}
     </>
   )
